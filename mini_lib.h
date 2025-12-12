@@ -3,10 +3,15 @@
 #ifndef MINI_LIB_H
 #define MINI_LIB_H
 
+typedef enum status{
+    LIBRE = 0,
+    UTILISE = 1
+} Status;
+
 typedef struct malloc_element {
     void* ptr;              // Pointeur vers la zone utilisable
     size_t size;            // Taille demandée par l'utilisateur
-    int status;             // 0: LIBRE, 1: UTILISÉ
+    Status status;             // 0: LIBRE, 1: UTILISÉ
     struct malloc_element* next_malloc; // Chaînage
 } malloc_element;
 

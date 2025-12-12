@@ -2,10 +2,13 @@
 #include <stddef.h>
 #include "mini_lib.h"
 
+
 #define DEBUG
 #ifdef DEBUG
-    #include <stdio.h>
+#include <stdio.h>
 #endif  //DEBUG
+
+malloc_element* malloc_list = NULL;
 
 void mini_exit(int status){
     _exit(status);
@@ -28,12 +31,35 @@ void mini_memset(void* ptr, int size_element, int number_element){
 void* mini_calloc (int size_element, int number_element){
     
     void *ptr = sbrk(size_element * number_element);
+
     #ifdef DEBUG
         printf("sbrk(%d) : %p\n", size_element * number_element, ptr);
     #endif
+
     if (ptr == (void*) -1){ 
         error("Allocation impossible");
     }
-    mini_memset(ptr, size_element, number_element);
+    
+    malloc_element* current = malloc_list;
+    while (current != NULL){
+        if((current->status == LIBRE) && (current->size >= size_element * number_element)){
+            current->status = UTILISE;
+            mini_memset(ptr, size_element, number_element);            
+            return current->ptr;
+        }
+        else{
+            current = current->next_malloc;
+        }
+    }
+
+    malloc_element* new_malloc = sbrk(size_element * number_element);    
+    new_malloc->ptr = ptr;
+    new_malloc->size = size_element * number_element;
+    new_malloc->status = UTILISE;
+    new_malloc->next_malloc = malloc_list;
+    malloc_list = new_malloc;
+    mini_memset(ptr, size_element, number_element);            
+    
     return ptr;
 }
+ 
