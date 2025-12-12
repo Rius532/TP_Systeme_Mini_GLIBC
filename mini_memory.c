@@ -63,3 +63,14 @@ void* mini_calloc (int size_element, int number_element){
     return ptr;
 }
  
+void mini_free(void* ptr){
+    malloc_element* current = malloc_list;
+    while (current != NULL){
+        if(current->ptr == ptr){
+            current->status = LIBRE;
+            return;
+        }
+        else:
+            current = current->next_malloc;
+    }
+}   

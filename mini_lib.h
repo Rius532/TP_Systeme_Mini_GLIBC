@@ -23,5 +23,7 @@ void mini_memset(void* ptr, int size_element, int number_element);
 
 void mini_exit(int status);
 
+void mini_free(void* ptr);
+
 #endif // MINI_LIB_H
 
