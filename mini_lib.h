@@ -25,5 +25,9 @@ void mini_exit(int status);
 
 void mini_free(void* ptr);
 
+int nb_ptr_libre();
+
+int nb_ptr_utilisee();
+
 #endif // MINI_LIB_H
 

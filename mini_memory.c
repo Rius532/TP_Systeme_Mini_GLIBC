@@ -5,7 +5,7 @@
 
 #define DEBUG
 #ifdef DEBUG
-#include <stdio.h>
+    #include <stdio.h>
 #endif  //DEBUG
 
 malloc_element* malloc_list = NULL;
@@ -15,7 +15,9 @@ void mini_exit(int status){
 }
 
 void error (char* message){
-    printf("%s\n", message);
+    #ifdef DEBUG
+        printf("%s\n", message);
+    #endif
     mini_exit(1);
 }
 
@@ -24,7 +26,7 @@ void mini_memset(void* ptr, int size_element, int number_element){
         ((char*)ptr)[i] = 0;
     }
     #ifdef DEBUG
-        printf("memset(%d, %d) : %p (memoire remise a 0)\n", size_element, number_element, ptr);
+        printf("memoire remise a 0 (%d, %d) : %p (memset))\n", size_element, number_element, ptr);
     #endif 
 }
 
@@ -33,7 +35,7 @@ void* mini_calloc (int size_element, int number_element){
     void *ptr = sbrk(size_element * number_element);
 
     #ifdef DEBUG
-        printf("sbrk(%d) : %p\n", size_element * number_element, ptr);
+        printf("memoire allouee(%d) : %p\n", size_element * number_element, ptr);
     #endif
 
     if (ptr == (void*) -1){ 
@@ -68,9 +70,37 @@ void mini_free(void* ptr){
     while (current != NULL){
         if(current->ptr == ptr){
             current->status = LIBRE;
+            #ifdef DEBUG
+                printf("free(%p) : %p\n", ptr, current->ptr);
+            #endif
             return;
         }
-        else:
+        else{
             current = current->next_malloc;
+        }
     }
+    error("Pointeur introuvable");
 }   
+
+int nb_ptr_libre(){
+    int nb = 0;
+    malloc_element* current = malloc_list;
+    while (current != NULL){
+        if(current->status == LIBRE){
+            nb++;
+        }
+        current = current->next_malloc;
+    }
+    return nb;
+}
+int nb_ptr_utilisee(){
+    int nb = 0;
+    malloc_element* current = malloc_list;
+    while (current != NULL){
+        if(current->status == UTILISE){
+            nb++;
+        }
+        current = current->next_malloc;
+    }
+    return nb;
+}
