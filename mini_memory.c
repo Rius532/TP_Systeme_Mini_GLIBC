@@ -14,10 +14,9 @@ void mini_exit(int status){
     _exit(status);
 }
 
-void error (char* message){
-    #ifdef DEBUG
-        printf("%s\n", message);
-    #endif
+void error(char* message){
+    write(2, message, _internal_strlen(message));
+    write(2, "\n", 1);
     mini_exit(1);
 }
 
@@ -26,7 +25,7 @@ void mini_memset(void* ptr, int size_element, int number_element){
         ((char*)ptr)[i] = 0;
     }
     #ifdef DEBUG
-        printf("memoire remise a 0 (%d, %d) : %p (memset))\n", size_element, number_element, ptr);
+        printf("memoire remise a 0 (%d, %d) : %p (mini_memset))\n", size_element, number_element, ptr);
     #endif 
 }
 
@@ -42,7 +41,7 @@ void* mini_calloc (int size_element, int number_element){
         error("Allocation impossible");
     }
     
-    malloc_element* current = malloc_list;
+    malloc_element *current = malloc_list;
     while (current != NULL){
         if((current->status == LIBRE) && (current->size >= size_element * number_element)){
             current->status = UTILISE;

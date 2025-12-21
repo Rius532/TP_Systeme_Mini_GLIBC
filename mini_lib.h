@@ -17,17 +17,21 @@ typedef struct malloc_element {
 
 extern malloc_element* malloc_list; // Variable globale
 
-void* mini_calloc (int size_element, int number_element);
+extern void error (char* message);
+
+extern void* mini_calloc (int size_element, int number_element);
 
 void mini_memset(void* ptr, int size_element, int number_element);
 
-void mini_exit(int status);
+extern void mini_exit(int status);
 
 void mini_free(void* ptr);
 
 int nb_ptr_libre();
 
 int nb_ptr_utilisee();
+
+void mini_printf(char* msg);
 
 #endif // MINI_LIB_H
 

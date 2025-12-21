@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-OBJ = main.o mini_memory.o
+OBJ = main.o mini_memory.o mini_string.o
 
 app: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o app.exe
