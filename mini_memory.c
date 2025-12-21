@@ -27,8 +27,10 @@ void error(char* message){
 
 
 void mini_memset(void* ptr, int size_element, int number_element){
-    for (int i = 0; i < size_element * number_element; i++){
-        ((char*)ptr)[i] = 0;
+    char* p = (char*)ptr;
+    int total_size = size_element * number_element;
+    for (int i = 0; i < total_size; i++){
+        p[i] = '\0';
     }
     #ifdef DEBUG
         printf("memoire remise a 0 (%d, %d) : %p (mini_memset))\n", size_element, number_element, ptr);
