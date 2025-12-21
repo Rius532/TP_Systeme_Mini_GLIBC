@@ -49,7 +49,7 @@ void* mini_calloc(int size_element, int number_element){
     malloc_element *current = malloc_list;
     while (current != NULL){
         /* Si le bloc est LIBRE et que sa taille est SUFFISANTE */
-        if(current->status == 0 && current->size >= total_size){
+        if(current->status == LIBRE && current->size >= total_size){
             current->status = UTILISE; 
             mini_memset(current->ptr, size_element, number_element); // Reset mémoire
             
@@ -91,7 +91,7 @@ void* mini_calloc(int size_element, int number_element){
     #ifdef DEBUG
         printf("DEBUG: Allocated new block at %p (size: %d)\n", ptr_data, total_size);
     #endif
-    
+
     return ptr_data;
 }
  
