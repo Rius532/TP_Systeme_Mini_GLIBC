@@ -14,12 +14,17 @@ void mini_exit(int status){
     _exit(status);
 }
 
-void error (char* message){
-    #ifdef DEBUG
-        printf("%s\n", message);
-    #endif
+int _internal_strlen(char *s) {
+    int len = 0;
+    while (s[len] != '\0') len++;
+    return len;
+}
+
+void error(char* message){
+    write(2, message + "\n", (_internal_strlen(message)+1));
     mini_exit(1);
 }
+
 
 void mini_memset(void* ptr, int size_element, int number_element){
     for (int i = 0; i < size_element * number_element; i++){
