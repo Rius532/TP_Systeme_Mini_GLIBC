@@ -14,9 +14,10 @@ void mini_exit(int status){
     _exit(status);
 }
 
-void error(char* message){
-    write(2, message, _internal_strlen(message));
-    write(2, "\n", 1);
+void error (char* message){
+    #ifdef DEBUG
+        printf("%s\n", message);
+    #endif
     mini_exit(1);
 }
 
