@@ -8,6 +8,7 @@
     #include <stdio.h>
 #endif  //DEBUG
 
+/* Variable globale */
 malloc_element* malloc_list = NULL;
 
 void mini_exit(int status){
@@ -21,7 +22,8 @@ int _internal_strlen(char *s) {
 }
 
 void error(char* message){
-    write(2, message + "\n", (_internal_strlen(message)+1));
+    write(2, message, _internal_strlen(message));
+    write(2, "\n", 1);
     mini_exit(1);
 }
 
@@ -37,43 +39,6 @@ void mini_memset(void* ptr, int size_element, int number_element){
     #endif 
 }
 
-#include <unistd.h>
-#include "mini_lib.h"
-
-/* * Pas de <stdio.h>. Pas de GLIBC.
- * On respecte strictement le sujet.
- */
-
-/* Variable globale imposée par l'exercice 8 [cite: 31] */
-malloc_element* malloc_list = NULL;
-
-void mini_exit(int status){
-    /* Appel système direct [cite: 37] */
-    _exit(status);
-}
-
-/* Version système de strlen pour l'affichage d'erreur */
-int _internal_strlen(char *s) {
-    int len = 0;
-    while (s[len] != '\0') len++;
-    return len;
-}
-
-void error(char* message){
-    /* On utilise write (syscall) pour afficher l'erreur sur stderr (fd 2) */
-    write(2, message, _internal_strlen(message));
-    write(2, "\n", 1);
-    mini_exit(1);
-}
-
-void mini_memset(void* ptr, int size_element, int number_element){
-    /* Initialisation du buffer avec '\0' [cite: 18] */
-    char* p = (char*)ptr;
-    int total_size = size_element * number_element;
-    for (int i = 0; i < total_size; i++){
-        p[i] = '\0';
-    }
-}
 
 void* mini_calloc(int size_element, int number_element){
     int total_size = size_element * number_element;
