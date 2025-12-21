@@ -37,39 +37,88 @@ void mini_memset(void* ptr, int size_element, int number_element){
     #endif 
 }
 
-void* mini_calloc (int size_element, int number_element){
-    
-    void *ptr = sbrk(size_element * number_element);
+#include <unistd.h>
+#include "mini_lib.h"
 
-    #ifdef DEBUG
-        printf("memoire allouee(%d) : %p\n", size_element * number_element, ptr);
-    #endif
+/* * Pas de <stdio.h>. Pas de GLIBC.
+ * On respecte strictement le sujet.
+ */
 
-    if (ptr == (void*) -1){ 
-        error("Allocation impossible");
+/* Variable globale imposée par l'exercice 8 [cite: 31] */
+malloc_element* malloc_list = NULL;
+
+void mini_exit(int status){
+    /* Appel système direct [cite: 37] */
+    _exit(status);
+}
+
+/* Version système de strlen pour l'affichage d'erreur */
+int _internal_strlen(char *s) {
+    int len = 0;
+    while (s[len] != '\0') len++;
+    return len;
+}
+
+void error(char* message){
+    /* On utilise write (syscall) pour afficher l'erreur sur stderr (fd 2) */
+    write(2, message, _internal_strlen(message));
+    write(2, "\n", 1);
+    mini_exit(1);
+}
+
+void mini_memset(void* ptr, int size_element, int number_element){
+    /* Initialisation du buffer avec '\0' [cite: 18] */
+    char* p = (char*)ptr;
+    int total_size = size_element * number_element;
+    for (int i = 0; i < total_size; i++){
+        p[i] = '\0';
     }
+}
+
+void* mini_calloc(int size_element, int number_element){
+    int total_size = size_element * number_element;
     
+    if (total_size <= 0) return NULL;
+
+    /* Réutilisation de bloc */
     malloc_element *current = malloc_list;
     while (current != NULL){
-        if((current->status == LIBRE) && (current->size >= size_element * number_element)){
-            current->status = UTILISE;
-            mini_memset(ptr, size_element, number_element);            
+        /* Si le bloc est LIBRE et que sa taille est SUFFISANTE */
+        if(current->status == 0 && current->size >= total_size){
+            current->status = UTILISE; 
+            mini_memset(current->ptr, size_element, number_element); // Reset mémoire
             return current->ptr;
         }
-        else{
-            current = current->next_malloc;
-        }
+        current = current->next_malloc;
     }
 
-    malloc_element* new_malloc = sbrk(size_element * number_element);    
-    new_malloc->ptr = ptr;
-    new_malloc->size = size_element * number_element;
-    new_malloc->status = UTILISE;
-    new_malloc->next_malloc = malloc_list;
-    malloc_list = new_malloc;
-    mini_memset(ptr, size_element, number_element);            
+    /* Allocation système si aucune réutilisation possible */
     
-    return ptr;
+    /* Allocation de la structure */
+    malloc_element* new_el = sbrk(sizeof(malloc_element));
+    if (new_el == (void*)-1) {
+        return NULL; 
+    }
+
+    /* Allocation des données */
+    void *ptr_data = sbrk(total_size);
+    if (ptr_data == (void*)-1) {
+        return NULL;
+    }
+
+    /* Initialisation de la structure */
+    new_el->ptr = ptr_data;
+    new_el->size = total_size;
+    new_el->status = UTILISE;
+    
+    /* Insertion au début */
+    new_el->next_malloc = malloc_list;
+    malloc_list = new_el;
+
+    /* Initialisation à 0*/
+    mini_memset(ptr_data, size_element, number_element);
+
+    return ptr_data;
 }
  
 void mini_free(void* ptr){
@@ -86,9 +135,8 @@ void mini_free(void* ptr){
             current = current->next_malloc;
         }
     }
-    error("Pointeur introuvable");
-}   
-
+    error("Invalid pointer freed");
+}
 int nb_ptr_libre(){
     int nb = 0;
     malloc_element* current = malloc_list;
