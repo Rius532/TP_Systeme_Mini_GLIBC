@@ -35,8 +35,8 @@ void mini_memset(void* ptr, int size_element, int number_element){
         p[i] = '\0';
     }
     #ifdef DEBUG
-        printf("memoire remise a 0 (%d, %d) : %p (mini_memset))\n", size_element, number_element, ptr);
-    #endif 
+        printf("mini_memset (%d elements of %d bytes) at %p\n", number_element, size_element, ptr);
+    #endif
 }
 
 
@@ -52,6 +52,11 @@ void* mini_calloc(int size_element, int number_element){
         if(current->status == 0 && current->size >= total_size){
             current->status = UTILISE; 
             mini_memset(current->ptr, size_element, number_element); // Reset mémoire
+            
+            #ifdef DEBUG
+                printf("DEBUG: Reusing block at %p (size: %d)\n", current->ptr, (int)current->size);
+            #endif
+
             return current->ptr;
         }
         current = current->next_malloc;
@@ -83,6 +88,10 @@ void* mini_calloc(int size_element, int number_element){
     /* Initialisation à 0*/
     mini_memset(ptr_data, size_element, number_element);
 
+    #ifdef DEBUG
+        printf("DEBUG: Allocated new block at %p (size: %d)\n", ptr_data, total_size);
+    #endif
+    
     return ptr_data;
 }
  
