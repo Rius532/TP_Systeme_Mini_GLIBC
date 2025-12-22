@@ -46,7 +46,6 @@ int mini_scanf(char* buffer, int size_buffer){
         int ret;
         while(1){
             ret = read(0, &c, 1);
-            /* On sort si erreur, fin de fichier, ou saut de ligne trouvé */
             if (ret <= 0 || c == '\n') {
                 break;
             }
@@ -59,4 +58,24 @@ int mini_scanf(char* buffer, int size_buffer){
     }
 
     return n;
+}
+
+int mini_strcpy(char* dest, char* src){
+    if(dest == NULL || src == NULL) return -1; 
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+    return i;
+}
+
+int mini_strcmp(char* s1, char* s2){
+    if (s1 == NULL || s2 == NULL) return -1; /* Sécurité basique */
+    int i = 0;
+    while (s1[i] == s2[i] && s1[i] != '\0') {
+        i++;
+    }
+    return (unsigned char)s1[i] - (unsigned char)s2[i];
 }

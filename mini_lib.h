@@ -41,5 +41,9 @@ void mini_printf(char* msg);
 
 int mini_scanf(char* buffer, int size_buffer);
 
+int mini_strcpy(char* s, char *d);
+
+int mini_strcmp(char* s1, char* s2);
+
 #endif // MINI_LIB_H
 
