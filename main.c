@@ -60,6 +60,34 @@ void test_mini_string() {
     mini_printf(" Et la suite ici.\n");
 }
 
+void test_mini_scanf() {
+    mini_printf("\n=== TEST 4: Mini Scanf & Buffer Overflow Protection ===\n");
+    
+    int len_buffer = 10;
+    char* buffer = mini_calloc(sizeof(char), len_buffer);
+    if (buffer == NULL) mini_exit(1);
+
+    mini_printf("1. Entrez un mot court (<10 caracteres): ");
+    mini_scanf(buffer, len_buffer);
+    mini_printf("   -> Lu: ");
+    mini_printf(buffer);
+    mini_printf("\n");
+
+    mini_printf("2. Entrez une phrase longue (>10 caracteres): ");
+    mini_scanf(buffer, len_buffer);
+    mini_printf("   -> Lu (tronque): ");
+    mini_printf(buffer);
+    mini_printf("\n");
+
+    mini_printf("3. Entrez un dernier mot (si 3. s'affiche => fonctione car buffer précedent vidé): ");
+    mini_scanf(buffer, len_buffer);
+    mini_printf("   -> Lu: ");
+    mini_printf(buffer);
+    mini_printf("\n");
+
+    mini_free(buffer);
+}
+
 
 int main(int argc, char **argv) {
     mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
@@ -68,6 +96,7 @@ int main(int argc, char **argv) {
     test_basic_allocation();
     test_reusable_memory();
     test_mini_string();
+    test_mini_scanf();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");

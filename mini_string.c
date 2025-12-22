@@ -34,3 +34,29 @@ void mini_printf(char* msg){
         }
     }
 }
+
+int mini_scanf(char* buffer, int size_buffer){
+    mini_flush();
+    int n = read(0, buffer, size_buffer -1);
+    if (n < 0) mini_exit(1);
+    buffer[n] = '\0';
+    
+    if(buffer[n-1] != '\n' && n == size_buffer - 1){
+        char c;
+        int ret;
+        while(1){
+            ret = read(0, &c, 1);
+            /* On sort si erreur, fin de fichier, ou saut de ligne trouvé */
+            if (ret <= 0 || c == '\n') {
+                break;
+            }
+        }
+    }
+    
+    if(n > 0 && buffer[n - 1] == '\n'){
+        buffer[n - 1] = '\0';
+        n--;
+    }
+
+    return n;
+}

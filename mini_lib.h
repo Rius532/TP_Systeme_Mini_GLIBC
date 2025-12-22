@@ -39,5 +39,7 @@ void mini_exit_string();
 
 void mini_printf(char* msg);
 
+int mini_scanf(char* buffer, int size_buffer);
+
 #endif // MINI_LIB_H
 
