@@ -80,11 +80,54 @@ int mini_strcmp(char* s1, char* s2){
     }
     return (unsigned char)s1[i] - (unsigned char)s2[i];
 }
-/*
- void mini_perror(char * message){
-    mini_printf(message);
-    mini_printf(": ");
-    mini_printf(strerror(errno));
-    mini_printf("\n");
- }
-    */
+
+/* Fonction utilitaire : Convertit un int en chaîne */
+void int_to_string(int n, char* buffer) {
+    int i = 0;
+    int is_negative = 0;
+
+    if (n == 0) {
+        buffer[0] = '0';
+        buffer[1] = '\0';
+        return;
+    }
+
+    if (n < 0) {
+        is_negative = 1;
+        n = -n;
+    }
+
+    while (n != 0) {
+        int rem = n % 10;
+        buffer[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        n = n / 10;
+    }
+
+    if (is_negative) {
+        buffer[i++] = '-';
+    }
+
+    buffer[i] = '\0';
+
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = buffer[start];
+        buffer[start] = buffer[end];
+        buffer[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+void mini_perror(char* message) {
+    if (message != NULL) {
+        write(2, message, mini_strlen(message));
+        write(2, ": ", 2);
+    }
+    char num_buf[12];
+    int_to_string(errno, num_buf);
+    write(2, "Error Code ", 11);
+    write(2, num_buf, mini_strlen(num_buf));
+    write(2, "\n", 1);
+}
