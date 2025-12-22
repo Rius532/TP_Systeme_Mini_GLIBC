@@ -12,17 +12,18 @@
 malloc_element* malloc_list = NULL;
 
 void mini_exit(int status){
+    mini_flush();
     _exit(status);
 }
 
-int _internal_strlen(char *s) {
+int mini_strlen(char* s) {
     int len = 0;
     while (s[len] != '\0') len++;
     return len;
 }
 
 void error(char* message){
-    write(2, message, _internal_strlen(message));
+    write(2, message, mini_strlen(message));
     write(2, "\n", 1);
     mini_exit(1);
 }
@@ -54,7 +55,7 @@ void* mini_calloc(int size_element, int number_element){
             mini_memset(current->ptr, size_element, number_element); // Reset mémoire
             
             #ifdef DEBUG
-                printf("DEBUG: Reusing block at %p (size: %d)\n", current->ptr, (int)current->size);
+                printf("Reusing block at %p (size: %d)\n", current->ptr, (int)current->size);
             #endif
 
             return current->ptr;
@@ -89,7 +90,7 @@ void* mini_calloc(int size_element, int number_element){
     mini_memset(ptr_data, size_element, number_element);
 
     #ifdef DEBUG
-        printf("DEBUG: Allocated new block at %p (size: %d)\n", ptr_data, total_size);
+        printf("Allocated new block at %p (size: %d)\n", ptr_data, total_size);
     #endif
 
     return ptr_data;

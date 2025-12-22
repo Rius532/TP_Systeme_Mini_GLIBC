@@ -30,5 +30,7 @@ int main(){
     #endif
     mini_free(p3);
     
-    return 0;
+    mini_printf("Hello World !");
+
+    mini_exit(0);
 }
