@@ -1,36 +1,76 @@
 #include "mini_lib.h"
 
 #define DEBUG
+
 #ifdef DEBUG
     #include <stdio.h>
-#endif  //DEBUG
+    #define LOG_TEST(fmt, ...) printf("[TEST] " fmt "\n", ##__VA_ARGS__)
+    #define LOG_INFO(fmt, ...) printf("       -> " fmt "\n", ##__VA_ARGS__)
+#else
+    #define LOG_TEST(fmt, ...)
+    #define LOG_INFO(fmt, ...)
+#endif
 
-int main(){
+
+void test_basic_allocation() {
+    mini_printf("\n=== TEST 1: Allocation & Libération Simple ===\n");
+    int initial_used = nb_ptr_utilisee();
+
     void* p1 = mini_calloc(10, 10);
-    void* p2 = mini_calloc(5,5);
-
-    #ifdef DEBUG
-        printf("taille de la liste memoire : %d\n", nb_ptr_utilisee());
-    #endif
+    LOG_INFO("Pointeur p1 alloué: %p", p1);
+    LOG_INFO("Nombre elements utilises: %d", nb_ptr_utilisee());
 
     mini_free(p1);
-    #ifdef DEBUG
-        printf("taille de la liste memoire : %d\n", nb_ptr_utilisee());
-    #endif
-
-    mini_free(p2);
-    #ifdef DEBUG
-        printf("taille de la liste memoire : %d\n", nb_ptr_utilisee());
-    #endif
+    LOG_INFO("P1 libéré");
+    LOG_INFO("Nombre elements utilises: %d", nb_ptr_utilisee());
     
-    //TODO : vérifier que ça fait bien une réallocation en reprenant les pointeurs définis et libérés précédemments.
-    void* p3 = mini_calloc(2,2);
-    #ifdef DEBUG
-        printf("taille de la liste memoire : %d\n", nb_ptr_utilisee());
-    #endif
-    mini_free(p3);
-    
-    mini_printf("Hello World !");
+    if (nb_ptr_utilisee() == initial_used) {
+        mini_printf("[OK] La memoire est vide.\n");
+    } else {
+        mini_printf("[FAIL] Fuite de memoire detectee.\n");
+    }
+}
 
+void test_reusable_memory() {
+    mini_printf("\n=== TEST 2: Réutilisation de Mémoire ===\n");
+    
+    void* p_big = mini_calloc(1, 100); 
+    LOG_INFO("Allocation Grand Bloc (100 octets): %p", p_big);
+    
+    mini_free(p_big);
+    LOG_INFO("Liberation Grand Bloc");
+
+    void* p_small = mini_calloc(1, 20);
+    LOG_INFO("Allocation Petit Bloc (20 octets): %p", p_small);
+
+    if (p_big == p_small) {
+        mini_printf("[OK] SUCCESS: Le pointeur a ete reutilise !\n");
+    } else {
+        mini_printf("[FAIL] WARNING: Nouvelle allocation au lieu de reutilisation.\n");
+        LOG_INFO("Diff: p_big=%p vs p_small=%p", p_big, p_small);
+    }
+    
+    mini_free(p_small);
+}
+
+void test_mini_string() {
+    mini_printf("\n=== TEST 3: Mini String & Buffer ===\n");
+    mini_printf("Cette phrase est envoyee a mini_printf.\n");
+    mini_printf("Celle-ci aussi, sans saut de ligne...");
+    mini_printf(" Et la suite ici.\n");
+}
+
+
+int main(int argc, char **argv) {
+    mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
+    mini_printf("-----------------------------------------\n");
+
+    test_basic_allocation();
+    test_reusable_memory();
+    test_mini_string();
+
+    mini_printf("\n-----------------------------------------\n");
+    mini_printf("FIN DES TESTS.\n");
+    
     mini_exit(0);
 }
