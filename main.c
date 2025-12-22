@@ -88,6 +88,40 @@ void test_mini_scanf() {
     mini_free(buffer);
 }
 
+void test_strcmp_and_strcpy() {
+    mini_printf("\n=== TEST 5: strcmp & strcpy & crash test (Ex 22) ===\n");
+
+    char* s1 = "toto";
+    char* s2 = "toto";
+    char* s3 = "tata";
+
+    if (mini_strcmp(s1, s2) == 0) mini_printf("[OK] strcmp identiqes\n");
+    else mini_printf("[FAIL] strcmp identiqes rate\n");
+
+    if (mini_strcmp(s1, s3) > 0) mini_printf("[OK] strcmp ordre alphabetique\n");
+    else mini_printf("[FAIL] strcmp ordre rate\n");
+
+    char* buffer = mini_calloc(1, 10);
+    mini_strcpy(buffer, s1);
+    if (mini_strcmp(buffer, "toto") == 0) mini_printf("[OK] strcpy fonctionne\n");
+    else mini_printf("[FAIL] strcpy rate\n");
+    
+    mini_free(buffer);
+
+    mini_printf("\n--- Buffer overflow ---\n");
+    
+    char* petit_buffer = mini_calloc(1, 5); // Peut contenir "1234\0"
+    char* phrase_trop_longue = "phrase beaucoup trop longueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"; // 18 chars
+
+    mini_printf("Tentative de copier +100 chars dans un buffer de 5...\n");
+    mini_strcpy(petit_buffer, phrase_trop_longue);
+    mini_printf("Resultat dans petit_buffer : ");
+    mini_printf(petit_buffer); 
+    mini_printf("\n");
+    
+    mini_printf("[WARNING] On a écrasé la mémoire qui suit notre petit buffer (=> malloc juste après = segfault) \n");
+}
+
 
 int main(int argc, char **argv) {
     mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
@@ -97,6 +131,7 @@ int main(int argc, char **argv) {
     test_reusable_memory();
     test_mini_string();
     test_mini_scanf();
+    test_strcmp_and_strcpy();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");

@@ -45,5 +45,7 @@ int mini_strcpy(char* s, char *d);
 
 int mini_strcmp(char* s1, char* s2);
 
+void mini_perror(char * message);
+
 #endif // MINI_LIB_H
 

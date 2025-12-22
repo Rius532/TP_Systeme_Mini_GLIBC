@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <errno.h>
 #include "mini_lib.h"
 
 #define DEBUG
@@ -72,10 +73,18 @@ int mini_strcpy(char* dest, char* src){
 }
 
 int mini_strcmp(char* s1, char* s2){
-    if (s1 == NULL || s2 == NULL) return -1; /* Sécurité basique */
+    if (s1 == NULL || s2 == NULL) return -1; 
     int i = 0;
     while (s1[i] == s2[i] && s1[i] != '\0') {
         i++;
     }
     return (unsigned char)s1[i] - (unsigned char)s2[i];
 }
+/*
+ void mini_perror(char * message){
+    mini_printf(message);
+    mini_printf(": ");
+    mini_printf(strerror(errno));
+    mini_printf("\n");
+ }
+    */
