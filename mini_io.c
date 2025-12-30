@@ -90,7 +90,7 @@ int mini_fflush(MYFILE* file) {
     if (file->buffer_write != NULL && file->ind_write > 0) {
         int n = write(file->fd, file->buffer_write, file->ind_write);
         if (n == -1) return -1;   
-        file->ind_write = 0; // Une fois écrit le buffer est considéré comme vide
+        file->ind_write = 0; // on reset l'index du buffer (considère vide)
         return n;
     }
     return 0;
@@ -126,4 +126,39 @@ int mini_fwrite(void* buffer, int size_element, int number_element, MYFILE* file
     }
 
     return written;
+}
+
+int mini_fclose(MYFILE* file) {
+    if (file == NULL) return -1;
+    if (mini_fflush(file) == -1) {
+        // Erreur lors de l'écriture // TODO : Gestion de l'erreur ? on doit continuer dans tt les cas pr vider la memoire
+    }
+
+    if (close(file->fd) == -1) {
+        return -1;
+    }
+
+    if (file->buffer_read != NULL) {
+        mini_free(file->buffer_read);
+    }
+    if (file->buffer_write != NULL) {
+        mini_free(file->buffer_write);
+    }
+    
+    mini_free(file);
+    return 0;
+}
+
+/* Exercice 36 : Lecture d'un caractère */
+int mini_fgetc(MYFILE* file) {
+    char c;
+    int res = mini_fread(&c, 1, 1, file);
+    if (res <= 0) return -1; 
+    return (unsigned char)c; 
+}
+
+int mini_fputc(MYFILE* file, char c) {
+    int res = mini_fwrite(&c, 1, 1, file);
+    if (res <= 0) return -1;
+    return c;
 }

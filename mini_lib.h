@@ -67,5 +67,11 @@ int mini_fflush(MYFILE* file);
 
 int mini_fwrite(void* buffer, int size_element, int number_element, MYFILE* file);
 
+int mini_fclose(MYFILE* file);
+
+int mini_fgetc(MYFILE* file);
+
+int mini_fputc(MYFILE* file, char c);
+
 #endif // MINI_LIB_H
 
