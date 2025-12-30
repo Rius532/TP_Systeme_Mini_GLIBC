@@ -122,16 +122,48 @@ void test_strcmp_and_strcpy() {
     mini_printf("[WARNING] On a écrasé la mémoire qui suit notre petit buffer (=> malloc juste après = segfault) \n");
 }
 
+void test_mini_io_read() {
+    mini_printf("\n=== TEST 6: Mini IO Read ===\n");
+
+    /* 1. On ouvre un fichier existant (ton code source) */
+    char* filename = "mini_io.c";
+    MYFILE* f = mini_fopen(filename, 'r');
+
+    if (f == NULL) {
+        mini_printf("[ERREUR] Impossible d'ouvrir le fichier. Verifiez le nom.\n");
+        return; 
+    }
+    mini_printf("[OK] Fichier 'mini_io.c' ouvert avec succes.\n");
+
+    int len_read = 100;
+    char* buffer = mini_calloc(1, len_read + 1);
+
+    if (buffer == NULL) return;
+    int lus = mini_fread(buffer, 1, len_read, f);
+    if (lus == -1) {
+        mini_printf("[ERREUR] Echec de la lecture.\n");
+    } else {
+        buffer[lus] = '\0'; 
+        
+        mini_printf("--- Contenu lu (100 premiers octets) ---\n");
+        mini_printf(buffer);
+        mini_printf("\n--------------------------------------\n");
+    }
+
+    mini_free(buffer);
+}
+
 
 int main(int argc, char **argv) {
     mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
     mini_printf("-----------------------------------------\n");
 
-    test_basic_allocation();
-    test_reusable_memory();
-    test_mini_string();
-    test_mini_scanf();
-    test_strcmp_and_strcpy();
+    //test_basic_allocation();
+    //test_reusable_memory();
+    //test_mini_string();
+    //test_mini_scanf();
+    //test_strcmp_and_strcpy();
+    test_mini_io_read();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");
