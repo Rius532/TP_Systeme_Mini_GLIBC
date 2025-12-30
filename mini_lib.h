@@ -49,5 +49,15 @@ void int_to_string(int n, char* buffer);
 
 void mini_perror(char * message);
 
+typedef struct{
+    int fd;
+    void *buffer_read;
+    void *buffer_write;
+    int ind_read;
+    int ind_write;
+}MYFILE;
+
+MYFILE* mini_fopen(char* file, char mode);
+
 #endif // MINI_LIB_H
 

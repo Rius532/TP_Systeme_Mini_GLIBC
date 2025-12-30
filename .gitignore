@@ -3,3 +3,4 @@ notes.txt
 *.o
 app.exe
 main.o
+mini_memory.o
