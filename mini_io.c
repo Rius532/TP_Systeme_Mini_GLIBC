@@ -83,3 +83,47 @@ int mini_fread(void* buffer, int size_element, int number_element, MYFILE* file)
 
     return bytes_copied; /* Retourne le nombre d'octets lus (ou à adapter selon le return voulu) [cite: 91] */
 }
+
+// Force l'écriture du buffer sur le disque
+int mini_fflush(MYFILE* file) {
+    if (file == NULL) return -1;
+    if (file->buffer_write != NULL && file->ind_write > 0) {
+        int n = write(file->fd, file->buffer_write, file->ind_write);
+        if (n == -1) return -1;   
+        file->ind_write = 0; // Une fois écrit le buffer est considéré comme vide
+        return n;
+    }
+    return 0;
+}
+
+int mini_fwrite(void* buffer, int size_element, int number_element, MYFILE* file) {
+    if (file == NULL || buffer == NULL) return -1;
+
+    int total_bytes = size_element * number_element;
+    char* data = (char*)buffer;
+    int written = 0;
+    // Allocation du buffer d'écriture
+    if (file->buffer_write == NULL) {
+        file->buffer_write = mini_calloc(1, IOBUFFER_SIZE);
+        if (file->buffer_write == NULL) return -1;
+        file->ind_write = 0;
+    }
+
+    while (written < total_bytes) {
+        // On remplit le buffer interne octet par octet 
+        char* internal_buf = (char*)file->buffer_write;
+        internal_buf[file->ind_write] = data[written];
+        
+        file->ind_write++;
+        written++;
+
+        // Si le buffer est plein on l'écrit sur le disque
+        if (file->ind_write == IOBUFFER_SIZE) {
+            if (mini_fflush(file) == -1) {
+                return -1;
+            }
+        }
+    }
+
+    return written;
+}
