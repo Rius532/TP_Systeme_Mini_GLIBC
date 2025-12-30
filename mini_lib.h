@@ -59,5 +59,7 @@ typedef struct{
 
 MYFILE* mini_fopen(char* file, char mode);
 
+int mini_fwrite(void* buffer,int size_element, int number_element, MYFILE* file);
+
 #endif // MINI_LIB_H
 
