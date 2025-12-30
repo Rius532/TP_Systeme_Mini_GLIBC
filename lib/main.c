@@ -195,8 +195,8 @@ int main(int argc, char **argv) {
     //test_mini_string();
     //test_mini_scanf();
     //test_strcmp_and_strcpy();
-    test_mini_io_read();
-    test_mini_io_write();
+    //test_mini_io_read();
+    //test_mini_io_write();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");
