@@ -153,6 +153,38 @@ void test_mini_io_read() {
     mini_free(buffer);
 }
 
+void test_mini_io_write() {
+    mini_printf("\n=== TEST 7: Mini IO Write  ===\n");
+
+    char* filename = "test_output.txt";
+    
+    MYFILE* f = mini_fopen(filename, 'w');
+    if (f == NULL) {
+        mini_printf("[ERREUR] Impossible de creer le fichier.\n");
+        return;
+    }
+
+    char* texte = "Manifestment mini_fwrite fonctionne bien :)\n";
+    int len = mini_strlen(texte);
+
+    int ecrit = mini_fwrite(texte, 1, len, f);
+    
+    if (ecrit != len) {
+        mini_printf("[FAIL] Erreur nombre octets ecrits.\n");
+    } else {
+        mini_printf("[OK] Ecriture demandee avec succes.\n");
+    }
+
+    mini_fputc(f, 'A');
+    mini_fputc(f, 'B');
+    mini_fputc(f, 'C');
+    mini_fputc(f, '\n');
+
+    mini_fclose(f);
+    
+    mini_printf("[OK] Fichier fermee. cat test_output.txt pour verifier l'ecriture :) .\n");
+}
+
 
 int main(int argc, char **argv) {
     mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
@@ -164,6 +196,7 @@ int main(int argc, char **argv) {
     //test_mini_scanf();
     //test_strcmp_and_strcpy();
     test_mini_io_read();
+    test_mini_io_write();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");

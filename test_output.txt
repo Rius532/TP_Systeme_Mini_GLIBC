@@ -1,0 +1,2 @@
+Manifestment mini_fwrite fonctionne bien :)
+ABC
