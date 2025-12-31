@@ -9,7 +9,7 @@ CMD_DIR = cmds
 # On compile lib/xxx.c pour faire xxx.o
 LIB_OBJ = mini_memory.o mini_string.o mini_io.o
 
-all: app mini_touch
+all: app mini_touch mini_cp
 
 # --- Compilation des Exécutables ---
 
@@ -18,6 +18,9 @@ app: main.o $(LIB_OBJ)
 
 mini_touch: mini_touch.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_touch.o $(LIB_OBJ) -o mini_touch
+
+mini_cp: mini_cp.o $(LIB_OBJ)
+	$(CC) $(CFLAGS) mini_cp.o $(LIB_OBJ) -o mini_cp
 
 # --- Règles de Compilation Génériques ---
 
@@ -38,5 +41,8 @@ main.o: $(CMD_DIR)/main.c $(LIB_DIR)/mini_lib.h
 mini_touch.o: $(CMD_DIR)/mini_touch.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_touch.c -o mini_touch.o
 
+mini_cp.o: $(CMD_DIR)/mini_cp.c $(LIB_DIR)/mini_lib.h
+	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_cp.c -o mini_cp.o
+
 clean:
-	rm -f *.exe mini_touch *.o
+	rm -f *.exe mini_touch mini_cp *.o

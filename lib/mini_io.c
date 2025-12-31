@@ -160,5 +160,5 @@ int mini_fgetc(MYFILE* file) {
 int mini_fputc(MYFILE* file, char c) {
     int res = mini_fwrite(&c, 1, 1, file);
     if (res <= 0) return -1;
-    return c;
+    return (unsigned char)c;
 }
