@@ -1,1 +1,94 @@
-# TP_Systeme_Mini_GLIBC
+# TP1 : Programmation Système - Mini-GLIBC & Commandes Shell
+
+Ce projet implémente une bibliothèque standard C minimale (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, ainsi qu'une suite de commandes système (`touch`, `cp`, `cat`) basées sur cette bibliothèque.
+
+L'objectif est de gérer manuellement la mémoire, les chaînes de caractères et les entrées/sorties bufferisées via des appels système directs (`brk`, `read`, `write`, `open`, `close`).
+
+## Architecture du Projet
+
+- **`lib/`** : Contient le cœur de la bibliothèque (Moteur).
+
+  - `mini_memory.c` : `malloc` (liste chaînée), `free`, `calloc`.
+  - `mini_string.c` : Manipulation de chaînes et conversion.
+  - `mini_io.c` : Gestion des fichiers bufferisée (`MYFILE`).
+
+- **`cmds/`** : Contient les programmes utilisateurs (Commandes).
+
+  - `main.c` : Suite de tests unitaires et d'intégration.
+  - `mini_touch.c`, `mini_cp.c`, `mini_cat.c` : Réimplémentation des commandes.
+
+- **`Makefile`** : Script de compilation automatisé.
+
+## Compilation
+
+J'utilise un Makefile pour gérer les dépendances et l'édition de liens.
+Pour tout compiler (librairie + exécutables) :
+
+```bash
+make
+```
+
+Cela génère les exécutables : app.exe, mini_touch, mini_cp, mini_cat.
+
+Pour nettoyer le projet :
+
+```bash
+make clean
+```
+
+## Protocole de Test (Guide d'évaluation)
+
+### 1. Tests Unitaires & Bibliothèque (app.exe)
+
+app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées.
+
+```bash
+./app.exe
+```
+
+### 2. Test des Commandes Système
+
+A. Commande mini_touch
+Création d'un fichier avec mini_touch et vérification de son utilisation.
+
+```bash
+./mini_touch test_file
+ls -l test_file
+echo "Donnees" > test_file
+./mini_touch test_file
+cat test_file
+```
+
+B. Commande mini_cp (Copie haute performance)
+
+Génération d'un fichier binaire de 50 Mo puis mesure du temps et vérification de l'intégrité.
+
+```bash
+dd if=/dev/urandom of=source.bin bs=1M count=50
+time ./mini_cp source.bin dest.bin
+diff source.bin dest.bin # Ne doit rien afficher
+```
+
+C. Commande mini_cat
+
+```bash
+./mini_cat cmds/mini_cat.c
+```
+
+## Réponses aux Questions du Sujet
+
+### Exercice 20 : Pourquoi cette boucle dans mini_scanf ?
+
+Problème : L'entrée standard (stdin) est bufferisée par ligne. Si l'utilisateur saisit une chaîne plus longue que le buffer fourni à mini_scanf, les caractères excédentaires restent dans le flux d'entrée. A l'appel suivant de lecture, le programme "aspirera" ces résidus au lieu d'attendre l'utilisateur. Solution : Si le buffer est plein et ne finit pas par \n, on lance une boucle de "nettoyage" qui consomme les caractères restants un par un jusqu'à trouver le \n ou EOF. On a donc un flux propre pour la prochaine lecture.
+
+### Exercice 22 : Problèmes de sécurité de mini_strcpy et mini_strcmp
+
+Ces fonctions sont vulnérables aux Buffer Overflows parce qu'elles ne prennent pas en paramètre la taille maximale du buffer de destination. Elles se regardent uniquement la présence du caractère nul \0 dans la source. Donc le risque est que si la chaîne source est plus longue que la destination, la fonction écrase la mémoire adjacente (variables, adresses de retour), ce qui peut mener à des crashs (Segfault) ou à des failles d'exécution de code arbitraire. Pour résoudre cela il faudrait imposer une taille limite.
+
+### Exercice 29 : Stratégie de lecture bufferisée (mini_fread)
+
+La structure MYFILE ne contient pas de champ pour la quantité de données valides présentes dans le buffer de lecture. Donc on ne peut pas distinguer facilement si le buffer contient 2048 octets valides ou seulement 10 (cas de la fin de fichier). Mon implémentation de mini_fread recharge le buffer uniquement lorsque l'index de lecture atteint la taille totale du buffer ou lors de l'initialisation. Cela impose une lecture par blocs complets.
+
+### Exercice 40 : Gestion du binaire dans mini_cp
+
+Lors de la copie de fichiers binaires, l'octet 0xFF (255) est fréquent. Si mini_fgetc retourne cet octet stocké dans un char (signé), il vaut -1. Ce qui correspond à la valeur de retour -1 qui veuet aussi dire la fin de fichier (EOF) ou une erreur. Il faut donc caster le caractère lu en unsigned char au moment de le retourner, et le 255 est vraiment retourné comme un 255 et pas -1.
