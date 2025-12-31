@@ -58,3 +58,13 @@ mini_cat.o: $(CMD_DIR)/mini_cat.c $(LIB_DIR)/mini_lib.h
 
 clean:
 	rm -f *.exe mini_touch mini_cp mini_echo mini_cat *.o
+
+# 1. Nettoyage standard : supprime seulement les objets (.o)
+clean:
+	rm -f *.o
+
+# 2. Nettoyage complet : appelle 'clean' PUIS supprime les exécutables
+fclean: clean
+	rm -f app.exe mini_touch mini_cp mini_cat mini_echo
+
+rebuild: fclean all
