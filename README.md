@@ -81,6 +81,13 @@ D. Commande mini_cat
 ./mini_cat cmds/mini_cat.c
 ```
 
+E. Commande mini_head
+
+```bash
+./mini_head cmds/mini_head.c
+./mini_head -n 5 cmds/mini_head.c
+```
+
 ## Réponses aux Questions du Sujet
 
 ### Exercice 20 : Pourquoi cette boucle dans mini_scanf ?
@@ -98,3 +105,7 @@ La structure MYFILE ne contient pas de champ pour la quantité de données valid
 ### Exercice 40 : Gestion du binaire dans mini_cp
 
 Lors de la copie de fichiers binaires, l'octet 0xFF (255) est fréquent. Si mini_fgetc retourne cet octet stocké dans un char (signé), il vaut -1. Ce qui correspond à la valeur de retour -1 qui veuet aussi dire la fin de fichier (EOF) ou une erreur. Il faut donc caster le caractère lu en unsigned char au moment de le retourner, et le 255 est vraiment retourné comme un 255 et pas -1.
+
+```
+
+```
