@@ -66,7 +66,7 @@ Génération d'un fichier binaire de 50 Mo puis mesure du temps et vérification
 ```bash
 dd if=/dev/urandom of=source.bin bs=1M count=50
 time ./mini_cp source.bin dest.bin
-diff source.bin dest.bin # Ne doit rien afficher
+diff source.bin dest.bin
 ```
 
 C. Commande mini_echo
@@ -105,7 +105,3 @@ La structure MYFILE ne contient pas de champ pour la quantité de données valid
 ### Exercice 40 : Gestion du binaire dans mini_cp
 
 Lors de la copie de fichiers binaires, l'octet 0xFF (255) est fréquent. Si mini_fgetc retourne cet octet stocké dans un char (signé), il vaut -1. Ce qui correspond à la valeur de retour -1 qui veuet aussi dire la fin de fichier (EOF) ou une erreur. Il faut donc caster le caractère lu en unsigned char au moment de le retourner, et le 255 est vraiment retourné comme un 255 et pas -1.
-
-```
-
-```
