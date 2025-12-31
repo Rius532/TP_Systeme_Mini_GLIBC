@@ -69,7 +69,13 @@ time ./mini_cp source.bin dest.bin
 diff source.bin dest.bin # Ne doit rien afficher
 ```
 
-C. Commande mini_cat
+C. Commande mini_echo
+
+```bash
+./mini_echo test avec plusieurs mots
+```
+
+D. Commande mini_cat
 
 ```bash
 ./mini_cat cmds/mini_cat.c
