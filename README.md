@@ -23,6 +23,7 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_clean.c` : Remise à zéro d'un fichier. mini_grep
   - `mini_grep.c` : Affichage des lignes d'un fichier contenant un mot donné.
   - `mini_wc.c` : Affichage du nombre de mots d'un fichier.
+  - `mini_ls.c` : Affichage des fichiers d'un dossier.
 
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
@@ -150,6 +151,9 @@ echo "   un    deux   trois   " > test_wc.txt
 ./mini_wc test_wc.txt
 wc test_wc.txt
 ```
+
+J. Commande mini_ls
+NB : Ne fonctionne que si on es DANS le dossier. C'est à dire
 
 ## Réponses aux Questions du Sujet
 
