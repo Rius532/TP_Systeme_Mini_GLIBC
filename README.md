@@ -13,11 +13,16 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_io.c` : Gestion des fichiers bufferisée (`MYFILE`).
 
 - **`cmds/`** : Contient les programmes utilisateurs (Commandes).
-
   - `main.c` : Suite de tests unitaires et d'intégration.
-  - `mini_touch.c`, `mini_cp.c`, `mini_cat.c` : Réimplémentation des commandes.
+  - `mini_touch.c` : Création de fichier.
+  - `mini_cp.c` : Copie de fichier.
+  - `mini_cat.c` : Affichage de fichier.
+  - `mini_echo.c` : Affichage d'arguments.
+  - `mini_head.c` : Affichage du début de fichier.
+  - `mini_tail.c` : Affichage de la fin de fichier.
+  - `mini_clean.c` : Remise à zéro d'un fichier.
 
-- **`Makefile`** : Script de compilation automatisé.
+* **`Makefile`** : Script de compilation automatisé.
 
 ## Compilation
 
@@ -30,17 +35,29 @@ make
 
 Cela génère les exécutables : app.exe, mini_touch, mini_cp, mini_cat.
 
-Pour nettoyer le projet :
+Pour nettoyer le projet (fichiers objets):
 
 ```bash
 make clean
+```
+
+Pour nettoyer le projet (objets + executable):
+
+```bash
+make fclean
+```
+
+Pour rebuild le projet :
+
+```bash
+make rebuild
 ```
 
 ## Protocole de Test (Guide d'évaluation)
 
 ### 1. Tests Unitaires & Bibliothèque (app.exe)
 
-app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées.
+app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées. Commenter/Décommenter les tests à lancer dans le main.
 
 ```bash
 ./app.exe
@@ -86,6 +103,31 @@ E. Commande mini_head
 ```bash
 ./mini_head cmds/mini_head.c
 ./mini_head -n 5 cmds/mini_head.c
+```
+
+F. Commande mini_head
+
+```bash
+./mini_tail cmds/mini_tail.c
+./mini_tail -n 5 cmds/mini_tail.c
+```
+
+G. Commande mini_clean
+
+H. Manipulation de fichiers
+
+```bash
+./mini_touch test_file
+echo "DATA" > test_file
+./mini_touch test_file
+cat test_file
+
+dd if=/dev/urandom of=source.bin bs=1M count=50
+time ./mini_cp source.bin dest.bin
+diff source.bin dest.bin
+
+./mini_clean test_file
+ls -l test_file
 ```
 
 ## Réponses aux Questions du Sujet
