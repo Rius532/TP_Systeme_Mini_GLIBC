@@ -114,20 +114,18 @@ F. Commande mini_head
 
 G. Commande mini_clean
 
-H. Manipulation de fichiers
-
 ```bash
 ./mini_touch test_file
 echo "DATA" > test_file
-./mini_touch test_file
-cat test_file
-
-dd if=/dev/urandom of=source.bin bs=1M count=50
-time ./mini_cp source.bin dest.bin
-diff source.bin dest.bin
-
+./mini_cat test_file
 ./mini_clean test_file
 ls -l test_file
+```
+
+H. Commande mini_grep
+
+```bash
+
 ```
 
 ## Réponses aux Questions du Sujet
