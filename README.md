@@ -59,7 +59,7 @@ echo "Donnees" > test_file
 cat test_file
 ```
 
-B. Commande mini_cp (Copie haute performance)
+B. Commande mini_cp
 
 Génération d'un fichier binaire de 50 Mo puis mesure du temps et vérification de l'intégrité.
 

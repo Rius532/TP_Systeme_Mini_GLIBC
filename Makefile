@@ -9,7 +9,7 @@ CMD_DIR = cmds
 # On compile lib/xxx.c pour faire xxx.o
 LIB_OBJ = mini_memory.o mini_string.o mini_io.o
 
-all: app mini_touch mini_cp mini_echo mini_cat mini_head
+all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail
 
 # --- Compilation des Exécutables ---
 
@@ -30,6 +30,9 @@ mini_cat: mini_cat.o $(LIB_OBJ)
 
 mini_head: mini_head.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_head.o $(LIB_OBJ) -o mini_head
+
+mini_tail: mini_tail.o $(LIB_OBJ)
+	$(CC) $(CFLAGS) mini_tail.o $(LIB_OBJ) -o mini_tail
 
 # --- Règles de Compilation Génériques ---
 
@@ -62,8 +65,9 @@ mini_cat.o: $(CMD_DIR)/mini_cat.c $(LIB_DIR)/mini_lib.h
 mini_head.o: $(CMD_DIR)/mini_head.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_head.c -o mini_head.o
 
-clean:
-	rm -f *.exe mini_touch mini_cp mini_echo mini_cat *.o
+mini_tail.o: $(CMD_DIR)/mini_tail.c $(LIB_DIR)/mini_lib.h
+	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_tail.c -o mini_tail.o
+
 
 # 1. Nettoyage standard : supprime seulement les objets (.o)
 clean:
@@ -71,6 +75,6 @@ clean:
 
 # 2. Nettoyage complet : appelle 'clean' PUIS supprime les exécutables
 fclean: clean
-	rm -f app.exe mini_touch mini_cp mini_cat mini_echo mini_head
+	rm -f app.exe mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail
 
 rebuild: fclean all
