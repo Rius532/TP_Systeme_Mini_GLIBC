@@ -5,3 +5,6 @@ app.exe
 main.o
 mini_memory.o
 test_wc.txt
+.vscode/settings.json
+.vscode/c_cpp_properties.json
+.vscode/launch.json

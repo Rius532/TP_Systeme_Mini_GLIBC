@@ -131,3 +131,22 @@ void mini_perror(char* message) {
     write(2, num_buf, mini_strlen(num_buf));
     write(2, "\n", 1);
 }
+
+void mini_putchar(char c) {
+    write(1, &c, 1);
+}
+
+void mini_putstr(char *str) {
+    if (!str) return;
+    write(1, str, mini_strlen(str));
+}
+
+void mini_putnbr(long n) {
+    if (n < 0) {
+        mini_putchar('-');
+        n = -n;
+    }
+    if (n >= 10)
+        mini_putnbr(n / 10);
+    mini_putchar((n % 10) + '0');
+}

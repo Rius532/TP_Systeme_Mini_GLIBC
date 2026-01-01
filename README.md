@@ -153,7 +153,11 @@ wc test_wc.txt
 ```
 
 J. Commande mini_ls
-NB : Ne fonctionne que si on es DANS le dossier. C'est à dire
+
+```bash
+./mini_ls
+./mini_ls cmds
+```
 
 ## Réponses aux Questions du Sujet
 
