@@ -2,7 +2,7 @@
 #include <errno.h>
 #include "mini_lib.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
     #include <stdio.h>
 #endif

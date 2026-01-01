@@ -6,23 +6,26 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
 
 ## Architecture du Projet
 
-- **`lib/`** : Contient le cœur de la bibliothèque (Moteur).
+- **`lib/`** : Contient la bibliothèque.
 
   - `mini_memory.c` : `malloc` (liste chaînée), `free`, `calloc`.
   - `mini_string.c` : Manipulation de chaînes et conversion.
   - `mini_io.c` : Gestion des fichiers bufferisée (`MYFILE`).
 
-- **`cmds/`** : Contient les programmes utilisateurs (Commandes).
-  - `main.c` : Suite de tests unitaires et d'intégration.
+- **`cmds/`** : Contient les Commandes.
+  - `main.c` : Suite de tests unitaires.
   - `mini_touch.c` : Création de fichier.
   - `mini_cp.c` : Copie de fichier.
   - `mini_cat.c` : Affichage de fichier.
   - `mini_echo.c` : Affichage d'arguments.
   - `mini_head.c` : Affichage du début de fichier.
   - `mini_tail.c` : Affichage de la fin de fichier.
-  - `mini_clean.c` : Remise à zéro d'un fichier.
+  - `mini_clean.c` : Remise à zéro d'un fichier. mini_grep
+  - `mini_grep.c` : Affichage des lignes d'un fichier contenant un mot donné.
+  - `mini_wc.c` : Affichage du nombre de mots d'un fichier.
 
 * **`Makefile`** : Script de compilation automatisé.
+* **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
 
 ## Compilation
 
@@ -61,6 +64,18 @@ app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisat
 
 ```bash
 ./app.exe
+```
+
+**Commenter la ligne `#define DEBUG` dans `mini_string.c` & `mini_memory.c`**
+
+```C
+//#define DEBUG
+```
+
+Puis rebuild le projet
+
+```bash
+make rebuild
 ```
 
 ### 2. Test des Commandes Système
@@ -125,7 +140,15 @@ ls -l test_file
 H. Commande mini_grep
 
 ```bash
+./mini_grep "main" cmds/mini_grep.c
+```
 
+I.Commande mini_wc
+
+```bash
+echo "   un    deux   trois   " > test_wc.txt
+./mini_wc test_wc.txt
+wc test_wc.txt
 ```
 
 ## Réponses aux Questions du Sujet
