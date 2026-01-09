@@ -24,6 +24,8 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_grep.c` : Affichage des lignes d'un fichier contenant un mot donné.
   - `mini_wc.c` : Affichage du nombre de mots d'un fichier.
   - `mini_ls.c` : Affichage des fichiers d'un dossier.
+  - `mini_chmod.c` : Changement des droits d'un fichier.
+  - `mini_ln.c` : Création d'un lien symbolique.
 
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
@@ -157,6 +159,23 @@ J. Commande mini_ls
 ```bash
 ./mini_ls
 ./mini_ls cmds
+```
+
+K. Commande mini_chmod
+
+```bash
+./mini_touch test
+./mini_chmod 777 test
+./mini_ls
+```
+
+L. Commande mini_ln
+
+```bash
+./mini_touch source
+./mini_ln source destination
+echo "test_source" > source
+gedit destination
 ```
 
 ## Réponses aux Questions du Sujet
