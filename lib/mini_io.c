@@ -183,7 +183,6 @@ int mini_fclose(MYFILE *file)
     return 0;
 }
 
-/* Exercice 36 : Lecture d'un caractère */
 int mini_fgetc(MYFILE *file)
 {
     char c;
