@@ -84,4 +84,6 @@ void mini_putnbr(long n);
 
 int mini_putnbr_octal(char *str);
 
+char *get_full_path(char *dir, char *filename);
+
 #endif // MINI_LIB_H

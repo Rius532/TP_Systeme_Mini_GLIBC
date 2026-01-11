@@ -218,3 +218,52 @@ int mini_putnbr_octal(char *str)
     }
     return res;
 }
+
+char *get_full_path(char *dir, char *filename)
+{
+    int len_dir = mini_strlen(dir);
+    int len_file = mini_strlen(filename);
+
+    // On alloue : taille dossier + 1 ('/') + taille fichier + 1 ('\0')
+    // mini_calloc initialise tout à 0, donc le '\0' final est garanti.
+    char *new_path = (char *)mini_calloc(sizeof(char), len_dir + len_file + 2);
+
+    if (!new_path)
+    {
+        mini_perror("Erreur allocation path"); // Utilise ta lib pour l'erreur
+        return NULL;
+    }
+
+    int i = 0;
+
+    // 1. Copie du dossier
+    // On n'utilise pas mini_strcpy pour éviter l'ambiguïté s/d et gérer le curseur 'i'
+    int j = 0;
+    while (dir[j])
+    {
+        new_path[i] = dir[j];
+        i++;
+        j++;
+    }
+
+    // 2. Ajout du slash (si pas déjà présent et si le dossier n'est pas vide)
+    // Astuce : si dir est juste "/", on évite de faire "//" (même si Unix le tolère)
+    if (i > 0 && new_path[i - 1] != '/')
+    {
+        new_path[i] = '/';
+        i++;
+    }
+
+    // 3. Copie du nom de fichier
+    j = 0;
+    while (filename[j])
+    {
+        new_path[i] = filename[j];
+        i++;
+        j++;
+    }
+
+    // Pas besoin d'ajouter '\0' manuellement car mini_calloc l'a fait.
+
+    return new_path;
+}
