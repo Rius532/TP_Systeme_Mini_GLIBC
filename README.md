@@ -27,7 +27,8 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_chmod.c` : Changement des droits d'un fichier.
   - `mini_ln.c` : Création d'un lien symbolique.
   - `mini_quickdiff.c` : Affichage des différence entre deux fichiers.
-  - `mini_mv.c`: Déplcament d'un fichier vers un dossier cible.
+  - `mini_mv.c`: Déplcament d'un fichier vers un chemin cible.
+  - `mini_rm.c`: SUpression d'un fichier régulier.
 
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
@@ -188,12 +189,19 @@ Affiche les lignes différentes entre deux fichiers, rien si identique, gère au
 ./mini_quickdiff <file1> <file2>
 ```
 
-O. Commande mini_quickdiff
+O. Commande mini_mv
 
 ```bash
 mkdir dossier_test
 ./mini_touch fichier_test
 ./mini_mv fichier_test dossier_test
+```
+
+P. Commande mini_rm
+
+```bash
+./mini_touch fichier_test
+./mini_rm fichier_test dossier_test
 ```
 
 ## Réponses aux Questions du Sujet
