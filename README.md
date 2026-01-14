@@ -31,6 +31,7 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_rm.c`: Supression d'un fichier régulier.
   - `mini_rmdir.c`: Supression d'un dossier.
 
+* **`mini_shell`** : Emulation d'un mini shell.
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
 
@@ -67,7 +68,7 @@ make rebuild
 
 ### 1. Tests Unitaires & Bibliothèque (app.exe)
 
-app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées. Commenter/Décommenter les tests à lancer dans le main.
+app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées. **Commenter/Décommenter les tests à lancer dans le main.**
 
 ```bash
 ./app.exe
@@ -87,7 +88,8 @@ make rebuild
 
 ### 2. Test des Commandes Système
 
-A. Commande mini_touch
+A. Commande `mini_touch`
+
 Création d'un fichier avec mini_touch et vérification de son utilisation.
 
 ```bash
@@ -210,6 +212,16 @@ Q. Commande mini_rmdir
 ```bash
 ./mkdir dossier_test
 ./mini_rmdir dossier_test
+```
+
+## Mini Shell
+
+J'utilise execve donc il faut rentrer le chemin absolu des commandes à executer.
+Par exemple :
+
+```bash
+./mini_shell
+/bin/ls -l
 ```
 
 ## Réponses aux Questions du Sujet
