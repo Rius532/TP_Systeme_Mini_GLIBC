@@ -216,11 +216,11 @@ Q. Commande mini_rmdir
 
 ### Exercice 20 : Pourquoi cette boucle dans mini_scanf ?
 
-Problème : L'entrée standard (stdin) est bufferisée par ligne. Si l'utilisateur saisit une chaîne plus longue que le buffer fourni à mini_scanf, les caractères excédentaires restent dans le flux d'entrée. A l'appel suivant de lecture, le programme "aspirera" ces résidus au lieu d'attendre l'utilisateur. Solution : Si le buffer est plein et ne finit pas par \n, on lance une boucle de "nettoyage" qui consomme les caractères restants un par un jusqu'à trouver le \n ou EOF. On a donc un flux propre pour la prochaine lecture.
+Problème : L'entrée standard (stdin) est bufferisée par ligne. Si l'utilisateur saisit une chaîne plus longue que le buffer fourni à mini_scanf, les caractères excédentaires restent dans le flux d'entrée. A l'appel suivant de lecture, le programme aspirera ces résidus au lieu d'attendre une nouvelle entrée de l'utilisateur. Solution : Si le buffer est plein et ne finit pas par \n, on lance une boucle de nettoyage qui consomme les caractères restants un par un jusqu'à trouver le \n ou EOF. On a donc nettoyer le flux propre pour la prochaine lecture.
 
 ### Exercice 22 : Problèmes de sécurité de mini_strcpy et mini_strcmp
 
-Ces fonctions sont vulnérables aux Buffer Overflows parce qu'elles ne prennent pas en paramètre la taille maximale du buffer de destination. Elles se regardent uniquement la présence du caractère nul \0 dans la source. Donc le risque est que si la chaîne source est plus longue que la destination, la fonction écrase la mémoire adjacente (variables, adresses de retour), ce qui peut mener à des crashs (Segfault) ou à des failles d'exécution de code arbitraire. Pour résoudre cela il faudrait imposer une taille limite.
+Ces fonctions sont vulnérables aux Buffer Overflows parce qu'elles ne prennent pas en paramètre la taille maximale du buffer de destination. Elles se regardent uniquement la présence du caractère nul \0 dans la source. Donc le risque est que si la chaîne source est plus longue que la destination, la fonction écrase la mémoire adjacente (variables, adresses de retour), ce qui peut mener à des crashs (Segfault) ou à des failles d'exécution de code arbitraire. Pour résoudre cela on pourrait imposer une taille limite.
 
 ### Exercice 29 : Stratégie de lecture bufferisée (mini_fread)
 
@@ -228,4 +228,4 @@ La structure MYFILE ne contient pas de champ pour la quantité de données valid
 
 ### Exercice 40 : Gestion du binaire dans mini_cp
 
-Lors de la copie de fichiers binaires, l'octet 0xFF (255) est fréquent. Si mini_fgetc retourne cet octet stocké dans un char (signé), il vaut -1. Ce qui correspond à la valeur de retour -1 qui veuet aussi dire la fin de fichier (EOF) ou une erreur. Il faut donc caster le caractère lu en unsigned char au moment de le retourner, et le 255 est vraiment retourné comme un 255 et pas -1.
+Lors de la copie de fichiers binaires, si on tombe sur l'octet 0xFF (255), mini_fgetc retourne cet octet stocké dans un char (signé) qui vaut -1. Ce qui correspond à la valeur de retour -1 qui veut aussi dire la fin de fichier (EOF) ou une erreur. Il faut donc caster le caractère lu en unsigned char au moment de le retourner, et le 255 est vraiment retourné comme un 255 et pas -1.
