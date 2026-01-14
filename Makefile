@@ -9,7 +9,7 @@ CMD_DIR = cmds
 # On compile lib/xxx.c pour faire xxx.o
 LIB_OBJ = mini_memory.o mini_string.o mini_io.o
 
-all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm
+all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir
 
 # --- Compilation des Exécutables ---
 
@@ -61,9 +61,12 @@ mini_mv: mini_mv.o $(LIB_OBJ)
 mini_rm: mini_rm.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_rm.o $(LIB_OBJ) -o mini_rm
 
+mini_rmdir: mini_rmdir.o $(LIB_OBJ)
+	$(CC) $(CFLAGS) mini_rmdir.o $(LIB_OBJ) -o mini_rmdir
+
 # --- Règles de Compilation Génériques ---
 
-# 1. Compilation des fichiers de la LIBRAIRIE + s COMMANDES / TESTS
+# Compilation des fichiers de la LIBRAIRIE + s COMMANDES / TESTS
 # $< signifie "le fichier source", $@ signifie "le fichier objet"
 mini_memory.o: $(LIB_DIR)/mini_memory.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(LIB_DIR)/mini_memory.c -o mini_memory.o
@@ -122,12 +125,15 @@ mini_mv.o: $(CMD_DIR)/mini_mv.c $(LIB_DIR)/mini_lib.h
 mini_rm.o: $(CMD_DIR)/mini_rm.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_rm.c -o mini_rm.o
 
-# 1. Nettoyage standard : supprime seulement les objets (.o)
+mini_rmdir.o: $(CMD_DIR)/mini_rmdir.c $(LIB_DIR)/mini_lib.h
+	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_rmdir.c -o mini_rmdir.o
+
+# Nettoyage standard : supprime seulement les objets (.o)
 clean:
 	rm -f *.o
 
-# 2. Nettoyage complet : appelle 'clean' PUIS supprime les exécutables
+# Nettoyage complet : appelle 'clean' puis supprime les exécutables
 fclean: clean
-	rm -f app.exe mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm
+	rm -f app.exe mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir
 
 rebuild: fclean all

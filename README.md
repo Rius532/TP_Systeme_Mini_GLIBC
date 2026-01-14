@@ -28,7 +28,8 @@ L'objectif est de gérer manuellement la mémoire, les chaînes de caractères e
   - `mini_ln.c` : Création d'un lien symbolique.
   - `mini_quickdiff.c` : Affichage des différence entre deux fichiers.
   - `mini_mv.c`: Déplcament d'un fichier vers un chemin cible.
-  - `mini_rm.c`: SUpression d'un fichier régulier.
+  - `mini_rm.c`: Supression d'un fichier régulier.
+  - `mini_rmdir.c`: Supression d'un dossier.
 
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
@@ -202,6 +203,13 @@ P. Commande mini_rm
 ```bash
 ./mini_touch fichier_test
 ./mini_rm fichier_test dossier_test
+```
+
+Q. Commande mini_rmdir
+
+```bash
+./mkdir dossier_test
+./mini_rmdir dossier_test
 ```
 
 ## Réponses aux Questions du Sujet
