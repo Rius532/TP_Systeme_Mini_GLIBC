@@ -19,6 +19,7 @@ L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur 
   - `mini_memory.c` : `malloc` (liste chaînée), `free`, `calloc`.
   - `mini_string.c` : Manipulation de chaînes et conversion.
   - `mini_io.c` : Gestion des fichiers bufferisée (`MYFILE`).
+  - `mini_dir.c` : Contien mini_opendir, closedir, readdir.
 
 - **`cmds/`** : Contient les Commandes.
   - `main.c` : Suite de tests unitaires.

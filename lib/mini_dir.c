@@ -4,6 +4,7 @@
 #include <sys/syscall.h>
 
 #define AT_FDCWD -100
+
 // Structure du noyau Linux
 struct linux_dirent64
 {
@@ -43,7 +44,6 @@ struct mini_dirent *mini_readdir(MINI_DIR *dir)
 
     if (dir->buffer_pos >= dir->buffer_end)
     {
-        // SYS_getdents64 remplit le buffer avec plusieurs entrées
         int nread = syscall(SYS_getdents64, dir->fd, dir->buffer, 1024);
 
         if (nread == -1 || nread == 0)

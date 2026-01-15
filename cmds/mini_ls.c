@@ -1,9 +1,7 @@
 #include "mini_lib.h"
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <time.h> // Pour ctime
+#include <fcntl.h>
 
 void print_file_type(mode_t mode)
 {
@@ -41,11 +39,10 @@ void print_file_info(char *full_path, char *display_name)
 {
     struct stat st;
 
+    // Utilisation de lstat pour voir les liens symboliques eux-mêmes
     if (lstat(full_path, &st) == -1)
     {
-        mini_putstr("Error stat: ");
-        mini_putstr(display_name);
-        mini_putchar('\n');
+        mini_perror("Error stat");
         return;
     }
 
@@ -57,29 +54,21 @@ void print_file_info(char *full_path, char *display_name)
     mini_putnbr((long)st.st_nlink);
     mini_putstr("  ");
 
-    // User ID & Group ID
+    // UID / GID
     mini_putnbr((long)st.st_uid);
     mini_putstr("  ");
     mini_putnbr((long)st.st_gid);
     mini_putstr("  ");
 
-    // Taille en octets
+    // Taille
     mini_putnbr((long)st.st_size);
     mini_putstr("  ");
 
-    // Date
-    // Si ctime interdit : st.st_mtime
-    char *date = ctime(&st.st_mtime);
-    // couper le \n à la fin de ctime
-    int i = 0;
-    while (date[i] && date[i] != '\n')
-    {
-        mini_putchar(date[i]);
-        i++;
-    }
+    // Date (Timestamp brut)
+    mini_putnbr((long)st.st_mtime);
     mini_putstr("  ");
 
-    // Nom du fichier
+    // Nom
     mini_putstr(display_name);
 
     // Gestion Lien Symbolique
@@ -98,26 +87,27 @@ void print_file_info(char *full_path, char *display_name)
     mini_putchar('\n');
 }
 
-// Change la signature pour accepter les arguments
 int main(int argc, char **argv)
 {
-    DIR *d;
-    struct dirent *dir;
+    MINI_DIR *d;
+    struct mini_dirent *dir;
     char *target_dir;
+
     if (argc >= 2)
         target_dir = argv[1];
     else
         target_dir = ".";
 
-    d = opendir(target_dir); // On ouvre le dossier cible
+    d = mini_opendir(target_dir);
     if (!d)
     {
-        mini_putstr("Error: Cannot open directory\n");
-        return (1);
+        mini_perror("Error: Cannot open directory");
+        mini_exit(1);
     }
 
-    while ((dir = readdir(d)) != NULL)
+    while ((dir = mini_readdir(d)) != NULL)
     {
+        // pour ignorer les fichiers cachés (commençant par .)
         if (dir->d_name[0] != '.')
         {
             char *full_path = get_full_path(target_dir, dir->d_name);
@@ -128,6 +118,7 @@ int main(int argc, char **argv)
             }
         }
     }
-    closedir(d);
-    return (0);
+
+    mini_closedir(d);
+    mini_exit(0);
 }
