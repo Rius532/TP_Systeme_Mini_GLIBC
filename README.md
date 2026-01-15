@@ -22,6 +22,7 @@ L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur 
   - `mini_dir.c` : Contien mini_opendir, closedir, readdir.
 
 - **`cmds/`** : Contient les Commandes.
+
   - `main.c` : Suite de tests unitaires.
   - `mini_touch.c` : Création de fichier.
   - `mini_cp.c` : Copie de fichier.
@@ -36,14 +37,15 @@ L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur 
   - `mini_chmod.c` : Changement des droits d'un fichier.
   - `mini_ln.c` : Création d'un lien symbolique.
   - `mini_quickdiff.c` : Affichage des différence entre deux fichiers.
+  - `mini_mkdir.c` : Création d'un dossier.
   - `mini_mv.c`: Déplcament d'un fichier vers un chemin cible.
   - `mini_rm.c`: Supression d'un fichier régulier.
   - `mini_rmdir.c`: Supression d'un dossier.
 
-* **`mini_shell`** : Emulation d'un mini shell.
-* **`main`** : Emulation d'un mini shell
-* **`Makefile`** : Script de compilation automatisé.
-* **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
+- `mini_shell` : Emulation d'un mini shell.
+- `main` : Emulation d'un mini shell
+- `Makefile` : Script de compilation automatisé.
+- `Fichiers Executable` : Les fichiers commandes compilés (après avoir make).
 
 ## Compilation
 

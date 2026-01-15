@@ -10,7 +10,7 @@ SHELL_DIR = shell
 # On compile lib/xxx.c pour faire xxx.o
 LIB_OBJ = mini_memory.o mini_string.o mini_io.o mini_dir.o
 
-all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell mini_find
+all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell mini_find mini_mkdir
 
 # --- Compilation des Exécutables ---
 
@@ -70,6 +70,9 @@ mini_shell: mini_shell.o $(LIB_OBJ)
 
 mini_find: mini_find.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_find.o $(LIB_OBJ) -o mini_find
+
+mini_mkdir: mini_mkdir.o $(LIB_OBJ)
+	$(CC) $(CFLAGS) mini_mkdir.o $(LIB_OBJ) -o mini_mkdir
 
 # --- Règles de Compilation Génériques ---
 
@@ -144,12 +147,15 @@ mini_shell.o: $(SHELL_DIR)/mini_shell.c $(LIB_DIR)/mini_lib.h
 mini_find.o: $(CMD_DIR)/mini_find.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_find.c -o mini_find.o
 
+mini_mkdir.o: $(CMD_DIR)/mini_mkdir.c $(LIB_DIR)/mini_lib.h
+	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_mkdir.c -o mini_mkdir.o
+
 # Nettoyage standard : supprime seulement les objets (.o)
 clean:
 	rm -f *.o
 
 # Nettoyage complet : appelle 'clean' puis supprime les exécutables
 fclean: clean
-	rm -f main mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell mini_dir
+	rm -f main mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell mini_dir mini_mkdir
 
 rebuild: fclean all
