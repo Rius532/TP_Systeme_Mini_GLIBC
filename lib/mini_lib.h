@@ -86,4 +86,24 @@ int mini_putnbr_octal(char *str);
 
 char *get_full_path(char *dir, char *filename);
 
+typedef struct
+{
+    int fd;
+    int buffer_pos;
+    int buffer_end;
+    char buffer[1024];
+} MINI_DIR;
+
+struct mini_dirent
+{
+    char d_name[256];
+    unsigned char d_type;
+};
+
+MINI_DIR *mini_opendir(char *filename);
+
+struct mini_dirent *mini_readdir(MINI_DIR *dir);
+
+int mini_closedir(MINI_DIR *dir);
+
 #endif // MINI_LIB_H
