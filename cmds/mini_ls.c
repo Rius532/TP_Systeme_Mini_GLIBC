@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <time.h>
 
 void print_file_type(mode_t mode)
 {
@@ -65,7 +66,10 @@ void print_file_info(char *full_path, char *display_name)
     mini_putstr("  ");
 
     // Date (Timestamp brut)
-    mini_putnbr((long)st.st_mtime);
+    char date[200];
+    strftime(date, sizeof(date), "%h %e %H:%M", localtime(&(st.st_mtime)));
+    mini_putstr(date);
+    // mini_putnbr((long)st.st_mtime);
     mini_putstr("  ");
 
     // Nom
