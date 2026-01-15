@@ -7,13 +7,15 @@ Ce README est composé de 4 parties :
 - Protocole de tests
 - Réponses aux Questions du Sujet
 
-J'ai fini l'entièreté du TP avec :
+J'ai fini le TP avec :
 
 - La bibliothèque mini_lib.h (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, avec un main pour tester les différentes parties. La manière de tester ces commandes est expliquée dans la section 1 (1. Tests Unitaires & Bibliothèque) de **Protocole de test**.
 
 - L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur cette bibliothèque et les test associés dans la partie 2 (2. Test des Commandes Système) de **Protocole de test**.
 
 - L'exercice supplémentaire : implémenter `mini_opendir`, `mini_closedir`, `mini_resdir` dans un fichier `mini_dir` et la commande `mini_find` codée avec `mini_dir`. (`mini_ls` aussi implémenté avec mini_dir).
+
+NB : seul la gestion du chargement de mini_bashrc ne fonctionne pas. J'ai commenté ma fonction load_bashrc() qui ne fonctionne pas.
 
 ## Architecture du Projet
 
