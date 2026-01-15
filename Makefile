@@ -15,7 +15,7 @@ all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mi
 # --- Compilation des Exécutables ---
 
 app: main.o $(LIB_OBJ)
-	$(CC) $(CFLAGS) main.o $(LIB_OBJ) -o app.exe
+	$(CC) $(CFLAGS) main.o $(LIB_OBJ) -o main
 
 mini_touch: mini_touch.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_touch.o $(LIB_OBJ) -o mini_touch
@@ -141,6 +141,6 @@ clean:
 
 # Nettoyage complet : appelle 'clean' puis supprime les exécutables
 fclean: clean
-	rm -f app.exe mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell
+	rm -f main mini_touch mini_cp mini_cat mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell
 
 rebuild: fclean all

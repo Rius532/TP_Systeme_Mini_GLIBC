@@ -93,47 +93,83 @@ char *detect_redirection(char **args)
     }
     return NULL; // Pas de redirection trouvée
 }
-char *find_path(char *cmd, char **envp)
+int is_path(char *cmd)
 {
     int i = 0;
     while (cmd[i])
     {
         if (cmd[i] == '/')
-            return cmd; // On retourne la commande telle quelle (c'est déjà un chemin absolu)
+            return 1;
         i++;
     }
-    // recherche des commandes sans parser envp
-    char *paths[] = {"/bin", "/usr/bin", "/sbin", "/usr/sbin", NULL};
-    static char full_path[1024];
+    return 0;
+}
 
-    int j = 0;
-    while (paths[j])
+char *find_executable(char *cmd, char **envp)
+{
+    if (is_path(cmd))
     {
-        int k = 0;
-        int p = 0;
-
-        // Copie du dossier (ex: /bin)
-        while (paths[j][p])
-            full_path[k++] = paths[j][p++];
-
-        full_path[k++] = '/';
-
-        // Copie de la commande (ex: ls)
-        p = 0;
-        while (cmd[p])
-            full_path[k++] = cmd[p++];
-
-        full_path[k] = '\0';
-
-        // Test d'existence et d'exécution (Syscall access)
-        if (access(full_path, X_OK) == 0)
-        {
-            return full_path;
-        }
-        j++;
+        if (access(cmd, X_OK) == 0)
+            return cmd;
+        return NULL;
     }
 
-    return NULL; // Pas trouvé
+    char *path_var = NULL;
+    int i = 0;
+
+    // REcherche de la ligne "PATH=" dans l'environnement
+    while (envp[i])
+    {
+        // On compare manuellement les 5 premiers caractères
+        if (envp[i][0] == 'P' && envp[i][1] == 'A' &&
+            envp[i][2] == 'T' && envp[i][3] == 'H' &&
+            envp[i][4] == '=')
+        {
+            path_var = envp[i] + 5; // On saute "PATH="
+            break;
+        }
+        i++;
+    }
+
+    // Si PATH n'existe pas (env -i), impossible de trouver la commande
+    if (!path_var)
+        return NULL;
+
+    // Parsing du PATH
+    static char buffer[1024]; // pour construire le chemin complet
+    int p = 0;
+
+    while (path_var[p])
+    {
+        int b = 0; // Index dans buffer
+
+        // Copie du dossier courant jusqu'à ':' ou la fin
+        while (path_var[p] && path_var[p] != ':')
+        {
+            buffer[b++] = path_var[p++];
+        }
+
+        buffer[b++] = '/';
+
+        int c = 0;
+        while (cmd[c])
+        {
+            buffer[b++] = cmd[c++];
+        }
+        buffer[b] = '\0';
+
+        if (access(buffer, X_OK) == 0) // test d'execution
+        {
+            return buffer;
+        }
+
+        if (path_var[p] == ':')
+        {
+            p++;
+        }
+    }
+
+    return NULL; // Commande introuvable
 }
 
 void execute_command(char **args, char *redirection_file, int background, char **envp)
@@ -164,7 +200,7 @@ void execute_command(char **args, char *redirection_file, int background, char *
             }
             close(fd);
         }
-        char *valid_path = find_path(args[0], envp);
+        char *valid_path = find_executable(args[0], envp);
 
         if (valid_path == NULL)
         {

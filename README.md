@@ -40,6 +40,7 @@ L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur 
   - `mini_rmdir.c`: Supression d'un dossier.
 
 * **`mini_shell`** : Emulation d'un mini shell.
+* **`main`** : Emulation d'un mini shell
 * **`Makefile`** : Script de compilation automatisé.
 * **`Fichiers Executable`** : Les fichiers commandes compilés (après avoir make).
 
@@ -224,7 +225,6 @@ Q. Commande mini_rmdir
 
 ## Mini Shell
 
-J'utilise execve mais j'ai codé u
 Par exemple :
 
 ```bash
