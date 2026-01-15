@@ -10,6 +10,7 @@
 #define STDERR 2
 
 char **g_env;
+char g_base_path[1024];
 
 int mini_readline(char *buffer, int size)
 {
@@ -87,6 +88,42 @@ char *detect_redirection(char **args)
     return NULL;
 }
 
+char *resolve_path(char *cmd)
+{
+    int i = 0;
+    while (cmd[i])
+    {
+        if (cmd[i] == '/')
+            return cmd;
+        i++;
+    }
+    static char buffer[2048];
+
+    // On copie le chemin de base
+    int b = 0;
+    while (g_base_path[b])
+    {
+        buffer[b] = g_base_path[b];
+        b++;
+    }
+    buffer[b++] = '/';
+
+    // Ajout de la commande
+    int c = 0;
+    while (cmd[c])
+    {
+        buffer[b++] = cmd[c++];
+    }
+    buffer[b] = '\0';
+
+    if (access(buffer, X_OK) == 0)
+    {
+        return buffer;
+    }
+
+    return cmd;
+}
+
 void execute_command(char **args, char *redifile, int bg, char **envp)
 {
     pid_t pid = fork();
@@ -110,7 +147,10 @@ void execute_command(char **args, char *redifile, int bg, char **envp)
             dup2(fd, STDOUT);
             close(fd);
         }
-        execve(args[0], args, envp);
+        char *final_cmd = resolve_path(args[0]);
+
+        execve(final_cmd, args, envp);
+        // execve(args[0], args, envp);
         mini_perror("Execve failed");
         mini_exit(1);
     }
@@ -206,7 +246,7 @@ int builtin_export(char **args)
         while (g_env[count])
             count++;
         // Allouer un nouveau tableau plus grand (+2 : un pour la var, un pour NULL)
-        char **new_env = mini_calloc(sizeof(char *), count + 2);
+        // char **new_env = mini_calloc(sizeof(char *), count + 2);
         g_env[count] = arg;
         g_env[count + 1] = NULL;
     }
@@ -232,10 +272,14 @@ void init_env(char **envp)
 
 int main(int argc, char *argv[], char *envp[])
 {
+    if (getcwd(g_base_path, 1024) == NULL)
+    {
+        mini_perror("Init error");
+        return 1;
+    }
     init_env(envp);
     char cmd[512];
     char *args[256];
-
     while (1)
     {
         // Nettoyage zombies
