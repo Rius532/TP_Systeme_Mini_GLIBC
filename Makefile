@@ -10,7 +10,7 @@ SHELL_DIR = shell
 # On compile lib/xxx.c pour faire xxx.o
 LIB_OBJ = mini_memory.o mini_string.o mini_io.o mini_dir.o
 
-all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell
+all: app mini_touch mini_cp mini_echo mini_cat mini_head mini_tail mini_clean mini_grep mini_wc mini_ls mini_chmod mini_ln mini_quickdiff mini_mv mini_rm mini_rmdir mini_shell mini_find
 
 # --- Compilation des Exécutables ---
 
@@ -68,6 +68,8 @@ mini_rmdir: mini_rmdir.o $(LIB_OBJ)
 mini_shell: mini_shell.o $(LIB_OBJ)
 	$(CC) $(CFLAGS) mini_shell.o $(LIB_OBJ) -o mini_shell
 
+mini_find: mini_find.o $(LIB_OBJ)
+	$(CC) $(CFLAGS) mini_find.o $(LIB_OBJ) -o mini_find
 
 # --- Règles de Compilation Génériques ---
 
@@ -138,6 +140,9 @@ mini_rmdir.o: $(CMD_DIR)/mini_rmdir.c $(LIB_DIR)/mini_lib.h
 
 mini_shell.o: $(SHELL_DIR)/mini_shell.c $(LIB_DIR)/mini_lib.h
 	$(CC) $(CFLAGS) -c $(SHELL_DIR)/mini_shell.c -o mini_shell.o
+
+mini_find.o: $(CMD_DIR)/mini_find.c $(LIB_DIR)/mini_lib.h
+	$(CC) $(CFLAGS) -c $(CMD_DIR)/mini_find.c -o mini_find.o
 
 # Nettoyage standard : supprime seulement les objets (.o)
 clean:
