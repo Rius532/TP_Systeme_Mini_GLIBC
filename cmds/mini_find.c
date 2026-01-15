@@ -2,29 +2,22 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-// Algorithme récursif simple pour gérer '*' et '?'
-// pattern: "*.txt", string: "toto.txt" -> 1 (Vrai)
 int mini_fnmatch(char *pattern, char *string)
 {
-    // Fin des deux chaines -> Match parfait
     if (*pattern == '\0' && *string == '\0')
         return 1;
 
-    // Si on a une étoile dans le pattern
     if (*pattern == '*')
     {
-        // Cas 1 : L'étoile ne vaut rien ("*.c" vs ".c") -> On avance pattern
         if (mini_fnmatch(pattern + 1, string))
             return 1;
 
-        // Cas 2 : L'étoile mange un caractère et on continue -> On avance string
         if (*string != '\0' && mini_fnmatch(pattern, string + 1))
             return 1;
 
         return 0;
     }
 
-    // Si caractères identiques ou '?' (joker simple)
     if (*string != '\0' && (*pattern == '?' || *pattern == *string))
     {
         return mini_fnmatch(pattern + 1, string + 1);
