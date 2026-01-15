@@ -1,8 +1,16 @@
 # TP1 : Programmation Système - Mini-GLIBC & Commandes Shell
 
-Ce projet implémente une bibliothèque standard C minimale (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, ainsi qu'une suite de commandes système (`touch`, `cp`, `cat`) basées sur cette bibliothèque.
+Ce README est composé de 4 parties :
 
-L'objectif est de gérer manuellement la mémoire, les chaînes de caractères et les entrées/sorties bufferisées via des appels système directs (`brk`, `read`, `write`, `open`, `close`).
+- Architecture du projet
+- Compilation
+- Protocole de tests
+- Réponses aux Questions du Sujet
+
+J'ai fini l'entièreté du TP avec :
+
+La bibliothèque mini_lib.h (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, avec un main pour tester les différentes parties. La manière de tester ces commandes est expliquée dans la section 1 (1. Tests Unitaires & Bibliothèque) de **Protocole de test**.
+L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur cette bibliothèque et les test associés dans la partie 2 (2. Test des Commandes Système) de **Protocole de test**.
 
 ## Architecture du Projet
 
@@ -216,12 +224,12 @@ Q. Commande mini_rmdir
 
 ## Mini Shell
 
-J'utilise execve donc il faut rentrer le chemin absolu des commandes à executer.
+J'utilise execve mais j'ai codé u
 Par exemple :
 
 ```bash
 ./mini_shell
-/bin/ls -l
+ls -l
 ```
 
 ## Réponses aux Questions du Sujet

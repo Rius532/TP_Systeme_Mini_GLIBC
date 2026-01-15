@@ -93,6 +93,48 @@ char *detect_redirection(char **args)
     }
     return NULL; // Pas de redirection trouvée
 }
+char *find_path(char *cmd, char **envp)
+{
+    int i = 0;
+    while (cmd[i])
+    {
+        if (cmd[i] == '/')
+            return cmd; // On retourne la commande telle quelle (c'est déjà un chemin absolu)
+        i++;
+    }
+    // recherche des commandes sans parser envp
+    char *paths[] = {"/bin", "/usr/bin", "/sbin", "/usr/sbin", NULL};
+    static char full_path[1024];
+
+    int j = 0;
+    while (paths[j])
+    {
+        int k = 0;
+        int p = 0;
+
+        // Copie du dossier (ex: /bin)
+        while (paths[j][p])
+            full_path[k++] = paths[j][p++];
+
+        full_path[k++] = '/';
+
+        // Copie de la commande (ex: ls)
+        p = 0;
+        while (cmd[p])
+            full_path[k++] = cmd[p++];
+
+        full_path[k] = '\0';
+
+        // Test d'existence et d'exécution (Syscall access)
+        if (access(full_path, X_OK) == 0)
+        {
+            return full_path;
+        }
+        j++;
+    }
+
+    return NULL; // Pas trouvé
+}
 
 void execute_command(char **args, char *redirection_file, int background, char **envp)
 {
@@ -122,7 +164,18 @@ void execute_command(char **args, char *redirection_file, int background, char *
             }
             close(fd);
         }
-        execve(args[0], args, envp);
+        char *valid_path = find_path(args[0], envp);
+
+        if (valid_path == NULL)
+        {
+            mini_printf("Command not found: ");
+            mini_printf(args[0]);
+            mini_printf("\n");
+            mini_exit(127);
+        }
+
+        execve(valid_path, args, envp);
+        // execve(args[0], args, envp);
         mini_perror("Erreur execve");
         mini_exit(1);
     }
@@ -146,6 +199,16 @@ int main(int argc, char *argv[], char *envp[])
 
     while (1)
     {
+        // Nettoyage des zombies s'il y en a
+        int status;
+        pid_t zombie;
+        while ((zombie = waitpid(-1, &status, WNOHANG)) > 0)
+        {
+            mini_printf("[BG] Process ");
+            mini_putnbr((long)zombie);
+            mini_printf(" finished.\n");
+        }
+
         mini_printf("mini-shell$ ");
         mini_flush();
         if (mini_readline(cmd, 512) == 0)
