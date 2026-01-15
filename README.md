@@ -9,8 +9,11 @@ Ce README est composé de 4 parties :
 
 J'ai fini l'entièreté du TP avec :
 
-La bibliothèque mini_lib.h (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, avec un main pour tester les différentes parties. La manière de tester ces commandes est expliquée dans la section 1 (1. Tests Unitaires & Bibliothèque) de **Protocole de test**.
-L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur cette bibliothèque et les test associés dans la partie 2 (2. Test des Commandes Système) de **Protocole de test**.
+- La bibliothèque mini_lib.h (`mini_memory`, `mini_string`, `mini_io`) sans utiliser la GLIBC, avec un main pour tester les différentes parties. La manière de tester ces commandes est expliquée dans la section 1 (1. Tests Unitaires & Bibliothèque) de **Protocole de test**.
+
+- L'implémentation de commandes système (`touch`, `cp`, `cat`, ...) basées sur cette bibliothèque et les test associés dans la partie 2 (2. Test des Commandes Système) de **Protocole de test**.
+
+- L'exercice supplémentaire : implémenter `mini_opendir`, `mini_closedir`, `mini_resdir` dans un fichier `mini_dir` et la commande `mini_find` codée avec `mini_dir`. (`mini_ls` aussi implémenté avec mini_dir).
 
 ## Architecture du Projet
 
@@ -82,8 +85,20 @@ make rebuild
 
 app.exe exécute une batterie de tests sur l'allocation mémoire, la réutilisation des blocs (malloc/free), la gestion des chaînes et les IO bufferisées. **Commenter/Décommenter les tests à lancer dans le main.**
 
+Les tests à commenter/décommenter :
+
+```C
+// test_basic_allocation();
+// test_reusable_memory();
+// test_mini_string();
+// test_mini_scanf();
+// test_strcmp_and_strcpy();
+// test_mini_io_read();
+// test_mini_io_write();
+```
+
 ```bash
-./app.exe
+./main
 ```
 
 **Commenter la ligne `#define DEBUG` dans `mini_string.c` & `mini_memory.c`**
@@ -228,11 +243,9 @@ Q. Commande mini_rmdir
 
 ## Mini Shell
 
-Par exemple :
-
 ```bash
 ./mini_shell
-ls -l
+./mini_ls
 ```
 
 ## Réponses aux Questions du Sujet

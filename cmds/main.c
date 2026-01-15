@@ -3,69 +3,79 @@
 #define DEBUG
 
 #ifdef DEBUG
-    #include <stdio.h>
-    #define LOG_TEST(fmt, ...) printf("[TEST] " fmt "\n", ##__VA_ARGS__)
-    #define LOG_INFO(fmt, ...) printf("       -> " fmt "\n", ##__VA_ARGS__)
+#include <stdio.h>
+#define LOG_TEST(fmt, ...) printf("[TEST] " fmt "\n", ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) printf("       -> " fmt "\n", ##__VA_ARGS__)
 #else
-    #define LOG_TEST(fmt, ...)
-    #define LOG_INFO(fmt, ...)
+#define LOG_TEST(fmt, ...)
+#define LOG_INFO(fmt, ...)
 #endif
 
-
-void test_basic_allocation() {
+void test_basic_allocation()
+{
     mini_printf("\n=== TEST 1: Allocation & Libération Simple ===\n");
     int initial_used = nb_ptr_utilisee();
 
-    void* p1 = mini_calloc(10, 10);
+    void *p1 = mini_calloc(10, 10);
     LOG_INFO("Pointeur p1 alloué: %p", p1);
     LOG_INFO("Nombre elements utilises: %d", nb_ptr_utilisee());
 
     mini_free(p1);
     LOG_INFO("P1 libéré");
     LOG_INFO("Nombre elements utilises: %d", nb_ptr_utilisee());
-    
-    if (nb_ptr_utilisee() == initial_used) {
+
+    if (nb_ptr_utilisee() == initial_used)
+    {
         mini_printf("[OK] La memoire est vide.\n");
-    } else {
+    }
+    else
+    {
         mini_printf("[FAIL] Fuite de memoire detectee.\n");
     }
 }
 
-void test_reusable_memory() {
+void test_reusable_memory()
+{
     mini_printf("\n=== TEST 2: Réutilisation de Mémoire ===\n");
-    
-    void* p_big = mini_calloc(1, 100); 
+
+    void *p_big = mini_calloc(1, 100);
     LOG_INFO("Allocation Grand Bloc (100 octets): %p", p_big);
-    
+
     mini_free(p_big);
     LOG_INFO("Liberation Grand Bloc");
 
-    void* p_small = mini_calloc(1, 20);
+    void *p_small = mini_calloc(1, 20);
     LOG_INFO("Allocation Petit Bloc (20 octets): %p", p_small);
 
-    if (p_big == p_small) {
+    if (p_big == p_small)
+    {
         mini_printf("[OK] SUCCESS: Le pointeur a ete reutilise !\n");
-    } else {
+    }
+    else
+    {
         mini_printf("[FAIL] WARNING: Nouvelle allocation au lieu de reutilisation.\n");
         LOG_INFO("Diff: p_big=%p vs p_small=%p", p_big, p_small);
     }
-    
+
     mini_free(p_small);
 }
 
-void test_mini_string() {
+void test_mini_string()
+{
     mini_printf("\n=== TEST 3: Mini String & Buffer ===\n");
     mini_printf("Cette phrase est envoyee a mini_printf.\n");
     mini_printf("Celle-ci aussi, sans saut de ligne...");
     mini_printf(" Et la suite ici.\n");
 }
 
-void test_mini_scanf() {
+void test_mini_scanf()
+{
     mini_printf("\n=== TEST 4: Mini Scanf & Buffer Overflow Protection ===\n");
-    
+
     int len_buffer = 10;
-    char* buffer = mini_calloc(sizeof(char), len_buffer);
-    if (buffer == NULL) mini_exit(1);
+    char *buffer = mini_calloc(sizeof(char), len_buffer);
+    if (buffer == NULL)
+        mini_exit(1);
 
     mini_printf("1. Entrez un mot court (<10 caracteres): ");
     mini_scanf(buffer, len_buffer);
@@ -88,63 +98,76 @@ void test_mini_scanf() {
     mini_free(buffer);
 }
 
-void test_strcmp_and_strcpy() {
+void test_strcmp_and_strcpy()
+{
     mini_printf("\n=== TEST 5: strcmp & strcpy & crash test (Ex 22) ===\n");
 
-    char* s1 = "toto";
-    char* s2 = "toto";
-    char* s3 = "tata";
+    char *s1 = "toto";
+    char *s2 = "toto";
+    char *s3 = "tata";
 
-    if (mini_strcmp(s1, s2) == 0) mini_printf("[OK] strcmp identiqes\n");
-    else mini_printf("[FAIL] strcmp identiqes rate\n");
+    if (mini_strcmp(s1, s2) == 0)
+        mini_printf("[OK] strcmp identiqes\n");
+    else
+        mini_printf("[FAIL] strcmp identiqes rate\n");
 
-    if (mini_strcmp(s1, s3) > 0) mini_printf("[OK] strcmp ordre alphabetique\n");
-    else mini_printf("[FAIL] strcmp ordre rate\n");
+    if (mini_strcmp(s1, s3) > 0)
+        mini_printf("[OK] strcmp ordre alphabetique\n");
+    else
+        mini_printf("[FAIL] strcmp ordre rate\n");
 
-    char* buffer = mini_calloc(1, 10);
+    char *buffer = mini_calloc(1, 10);
     mini_strcpy(buffer, s1);
-    if (mini_strcmp(buffer, "toto") == 0) mini_printf("[OK] strcpy fonctionne\n");
-    else mini_printf("[FAIL] strcpy rate\n");
-    
+    if (mini_strcmp(buffer, "toto") == 0)
+        mini_printf("[OK] strcpy fonctionne\n");
+    else
+        mini_printf("[FAIL] strcpy rate\n");
+
     mini_free(buffer);
 
     mini_printf("\n--- Buffer overflow ---\n");
-    
-    char* petit_buffer = mini_calloc(1, 5); // Peut contenir "1234\0"
-    char* phrase_trop_longue = "phrase beaucoup trop longueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"; // 18 chars
+
+    char *petit_buffer = mini_calloc(1, 5);                                                                                                                                           // Peut contenir "1234\0"
+    char *phrase_trop_longue = "phrase beaucoup trop longueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"; // 18 chars
 
     mini_printf("Tentative de copier +100 chars dans un buffer de 5...\n");
     mini_strcpy(petit_buffer, phrase_trop_longue);
     mini_printf("Resultat dans petit_buffer : ");
-    mini_printf(petit_buffer); 
+    mini_printf(petit_buffer);
     mini_printf("\n");
-    
+
     mini_printf("[WARNING] On a écrasé la mémoire qui suit notre petit buffer (=> malloc juste après = segfault) \n");
 }
 
-void test_mini_io_read() {
+void test_mini_io_read()
+{
     mini_printf("\n=== TEST 6: Mini IO Read ===\n");
 
     /* 1. On ouvre un fichier existant (ton code source) */
-    char* filename = "mini_io.c";
-    MYFILE* f = mini_fopen(filename, 'r');
+    char *filename = "mini_io.c";
+    MYFILE *f = mini_fopen(filename, 'r');
 
-    if (f == NULL) {
+    if (f == NULL)
+    {
         mini_printf("[ERREUR] Impossible d'ouvrir le fichier. Verifiez le nom.\n");
-        return; 
+        return;
     }
     mini_printf("[OK] Fichier 'mini_io.c' ouvert avec succes.\n");
 
     int len_read = 100;
-    char* buffer = mini_calloc(1, len_read + 1);
+    char *buffer = mini_calloc(1, len_read + 1);
 
-    if (buffer == NULL) return;
+    if (buffer == NULL)
+        return;
     int lus = mini_fread(buffer, 1, len_read, f);
-    if (lus == -1) {
+    if (lus == -1)
+    {
         mini_printf("[ERREUR] Echec de la lecture.\n");
-    } else {
-        buffer[lus] = '\0'; 
-        
+    }
+    else
+    {
+        buffer[lus] = '\0';
+
         mini_printf("--- Contenu lu (100 premiers octets) ---\n");
         mini_printf(buffer);
         mini_printf("\n--------------------------------------\n");
@@ -153,25 +176,30 @@ void test_mini_io_read() {
     mini_free(buffer);
 }
 
-void test_mini_io_write() {
+void test_mini_io_write()
+{
     mini_printf("\n=== TEST 7: Mini IO Write  ===\n");
 
-    char* filename = "test_output.txt";
-    
-    MYFILE* f = mini_fopen(filename, 'w');
-    if (f == NULL) {
+    char *filename = "test_output.txt";
+
+    MYFILE *f = mini_fopen(filename, 'w');
+    if (f == NULL)
+    {
         mini_printf("[ERREUR] Impossible de creer le fichier.\n");
         return;
     }
 
-    char* texte = "Manifestment mini_fwrite fonctionne bien :)\n";
+    char *texte = "Manifestment mini_fwrite fonctionne bien :)\n";
     int len = mini_strlen(texte);
 
     int ecrit = mini_fwrite(texte, 1, len, f);
-    
-    if (ecrit != len) {
+
+    if (ecrit != len)
+    {
         mini_printf("[FAIL] Erreur nombre octets ecrits.\n");
-    } else {
+    }
+    else
+    {
         mini_printf("[OK] Ecriture demandee avec succes.\n");
     }
 
@@ -181,25 +209,26 @@ void test_mini_io_write() {
     mini_fputc(f, '\n');
 
     mini_fclose(f);
-    
+
     mini_printf("[OK] Fichier fermee. cat test_output.txt pour verifier l'ecriture :) .\n");
 }
 
-
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     mini_printf("\nDÉMARRAGE DES TESTS MINI-GLIBC\n");
+    mini_printf("NB : penser à décommenter les tests voulus (cf README)\n");
     mini_printf("-----------------------------------------\n");
 
-    //test_basic_allocation();
-    //test_reusable_memory();
-    //test_mini_string();
-    //test_mini_scanf();
-    //test_strcmp_and_strcpy();
-    //test_mini_io_read();
-    //test_mini_io_write();
+    // test_basic_allocation();
+    // test_reusable_memory();
+    // test_mini_string();
+    // test_mini_scanf();
+    // test_strcmp_and_strcpy();
+    // test_mini_io_read();
+    // test_mini_io_write();
 
     mini_printf("\n-----------------------------------------\n");
     mini_printf("FIN DES TESTS.\n");
-    
+
     mini_exit(0);
 }
