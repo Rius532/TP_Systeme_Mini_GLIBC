@@ -9,6 +9,8 @@
 #define STDOUT 1
 #define STDERR 2
 
+char **g_env;
+
 int mini_readline(char *buffer, int size)
 {
     int ret;
@@ -127,8 +129,110 @@ void execute_command(char **args, char *redifile, int bg, char **envp)
     }
 }
 
+int builtin_cd(char **args)
+{
+    if (!args[1])
+        return 1;
+
+    if (chdir(args[1]) != 0)
+    {
+        mini_perror("cd failed");
+        return 1;
+    }
+    return 1;
+}
+
+int builtin_env()
+{
+    int i = 0;
+    while (g_env[i])
+    {
+        mini_printf(g_env[i]);
+        mini_printf("\n");
+        i++;
+    }
+    return 1;
+}
+
+int builtin_getenv(char **args)
+{
+    if (!args[1])
+    {
+        mini_printf("Usage: mini_getenv <VAR>\n");
+        return 1;
+    }
+
+    int index = find_env_var(g_env, args[1]);
+    if (index != -1)
+    {
+        char *ptr = g_env[index];
+        while (*ptr && *ptr != '=')
+            ptr++;
+        if (*ptr == '=')
+            ptr++;
+        mini_printf(ptr);
+        mini_printf("\n");
+    }
+    return 1;
+}
+int builtin_export(char **args)
+{
+    if (!args[1])
+        return 1;
+
+    char *arg = args[1];
+    int i = 0;
+    while (arg[i] && arg[i] != '=')
+        i++;
+    if (arg[i] != '=')
+        return 1;
+
+    char key[128];
+    int k = 0;
+    while (k < i && k < 127)
+    {
+        key[k] = arg[k];
+        k++;
+    }
+    key[k] = '\0';
+    int index = find_env_var(g_env, key);
+    if (index != -1)
+    {
+        g_env[index] = arg;
+    }
+    else
+    {
+        int count = 0;
+        while (g_env[count])
+            count++;
+        // Allouer un nouveau tableau plus grand (+2 : un pour la var, un pour NULL)
+        char **new_env = mini_calloc(sizeof(char *), count + 2);
+        g_env[count] = arg;
+        g_env[count + 1] = NULL;
+    }
+    return 1;
+}
+
+void init_env(char **envp)
+{
+    int count = 0;
+    while (envp[count])
+        count++;
+    g_env = (char **)mini_calloc(sizeof(char *), count + 100);
+
+    int i = 0;
+    while (envp[i])
+    {
+        // strdup
+        g_env[i] = envp[i];
+        i++;
+    }
+    g_env[i] = NULL;
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
+    init_env(envp);
     char cmd[512];
     char *args[256];
 
@@ -157,6 +261,28 @@ int main(int argc, char *argv[], char *envp[])
         parsing_manuel(cmd, args);
         if (args[0] == NULL)
             continue;
+
+        // Interception des commandes internes
+        if (mini_strcmp(args[0], "mini_cd") == 0)
+        {
+            builtin_cd(args);
+            continue;
+        }
+        if (mini_strcmp(args[0], "mini_env") == 0)
+        {
+            builtin_env();
+            continue;
+        }
+        if (mini_strcmp(args[0], "mini_getenv") == 0)
+        {
+            builtin_getenv(args);
+            continue;
+        }
+        if (mini_strcmp(args[0], "mini_export") == 0)
+        {
+            builtin_export(args);
+            continue;
+        }
 
         int bg = detect_background(args);
         char *redi = detect_redirection(args);

@@ -106,4 +106,8 @@ struct mini_dirent *mini_readdir(MINI_DIR *dir);
 
 int mini_closedir(MINI_DIR *dir);
 
+int mini_strncmp(char *s1, char *s2, int n);
+
+int find_env_var(char **env, char *var);
+
 #endif // MINI_LIB_H

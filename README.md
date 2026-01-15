@@ -246,6 +246,7 @@ Q. Commande mini_rmdir
 ```bash
 ./mini_shell
 ./mini_ls
+./mini_echo coucou > test.txt
 ```
 
 ## Réponses aux Questions du Sujet

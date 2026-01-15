@@ -267,3 +267,34 @@ char *get_full_path(char *dir, char *filename)
 
     return new_path;
 }
+
+int mini_strncmp(char *s1, char *s2, int n)
+{
+    int i = 0;
+    while (i < n && s1[i] && s2[i])
+    {
+        if (s1[i] != s2[i])
+            return s1[i] - s2[i];
+        i++;
+    }
+    if (i == n)
+        return 0;
+    return s1[i] - s2[i];
+}
+
+// Pour trouver une variable dans l'env. Retourne l'index ou -1.
+int find_env_var(char **env, char *var)
+{
+    int i = 0;
+    int len = mini_strlen(var);
+    while (env[i])
+    {
+        // On cherche "VAR=" au début de la chaine
+        if (mini_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
+        {
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}
